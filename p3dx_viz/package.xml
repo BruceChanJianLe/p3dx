@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package>
+  <name>p3dx_viz</name>
+  <version>0.0.1</version>
+  <description>Visualization configuration for p3dx</description>
+
+  <author email="jianle001@e.ntu.edu.sg">brucechanjianle</author>
+
+  <maintainer email="jianle001@e.ntu.edu.sg">brucechanjianle</maintainer>
+
+  <license>MIT</license>
+
+  <url type="website">http://ros.org/wiki/</url>
+  <url type="bugtracker">https://github.com/</url>
+  <url type="repository">https://github.com/</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roslaunch</build_depend>
+
+  <run_depend>p3dx_description</run_depend>
+  <run_depend>joint_state_publisher</run_depend>
+  <run_depend>robot_state_publisher</run_depend>
+  <run_depend>rviz</run_depend>
+  <run_depend>rviz_imu_plugin</run_depend>
+
+  <export>
+  </export>
+</package>
