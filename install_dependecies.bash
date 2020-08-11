@@ -11,8 +11,8 @@ else
     echo "Found ROS version $rosversion"
 fi
 
-sudo apt-get install ros-$rosversion-controller-manager
-sudo apt-get install ros-$rosversion-robot-localization
-sudo apt-get install ros-$rosversion-interactive-marker-twist-server
-sudo apt-get install ros-$rosversion-robot-state-publisher
-sudo apt-get install ros-$rosversion-twist-mux
+sudo apt-get install ros-$rosversion-controller-manager -y
+sudo apt-get install ros-$rosversion-robot-localization -y
+sudo apt-get install ros-$rosversion-interactive-marker-twist-server -y
+sudo apt-get install ros-$rosversion-robot-state-publisher -y
+sudo apt-get install ros-$rosversion-twist-mux -y
