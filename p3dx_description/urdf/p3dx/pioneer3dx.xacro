@@ -20,4 +20,8 @@
   <xacro:include filename="$(find p3dx_description)/urdf/camera/camera.xacro"/>
   <xacro:cam name="front_camera" parent="chassis" xyz="0 0 0.5" rpy="0 0 0" meshes="package://p3dx_description/meshes/camera" />
 
+  <!-- Camera Realsense -->
+  <xacro:include filename="$(find p3dx_description)/urdf/camera_rgbd/camera_rgbd.xacro"/>
+  <xacro:camera_rgbd name="rgbd_camera" parent="chassis" xyz="0.01 0 0.7" rpy="0 ${35.0*3.14159/180.0} 0" />
+
 </robot>
