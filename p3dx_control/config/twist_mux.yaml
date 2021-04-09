@@ -1,5 +1,5 @@
 topics:
-- name    : interactive_marker
+- name    : $(arg robot_namespace)/interactive_marker
   topic   : twist_marker_server/cmd_vel
   timeout : 0.5
   priority: 8

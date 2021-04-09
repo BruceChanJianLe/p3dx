@@ -1,16 +1,19 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro" name="pioneer3dx" >
 
+  <!-- Obtain launch file arguements -->
+  <xacro:arg name="robot_namespace" default="/"/>
+
   <!-- Import Rviz colors -->
   <xacro:include filename="$(find p3dx_description)/urdf/materials.xacro" />
 
   <!-- Import robot -->
   <xacro:include filename="$(find p3dx_description)/urdf/p3dx/pioneer3dx_body.xacro"/>
-  <xacro:pioneer3dx_body name="chassis" parent="base_link" meshes="package://p3dx_description/meshes/p3dx"/>
+  <xacro:pioneer3dx_body name="chassis" parent="base_link" meshes="package://p3dx_description/meshes/p3dx" robot_namespace="$(arg robot_namespace)"/>
 
   <!-- Laser  -->
   <xacro:include filename="$(find p3dx_description)/urdf/laser/hokuyo.xacro"/>
-  <xacro:laser name="laser" parent="chassis" xyz="0.16 0 0.1" rpy="0 0 0" meshes="package://p3dx_description/meshes/laser"/>
+  <xacro:laser name="laser" parent="chassis" xyz="0.16 0 0.1" rpy="0 0 0" meshes="package://p3dx_description/meshes/laser" robot_namespace="$(arg robot_namespace)"/>
 
   <!-- GPU Laser -->
 <!--  <xacro:include filename="$(find description_plugins)/test/multi_robot_scenario/urdf/laser/hokuyo_gpu.xacro"/>-->
@@ -18,6 +21,6 @@
 
   <!-- Camera -->
   <xacro:include filename="$(find p3dx_description)/urdf/camera/camera.xacro"/>
-  <xacro:cam name="front_camera" parent="chassis" xyz="0 0 0.5" rpy="0 0 0" meshes="package://p3dx_description/meshes/camera" />
+  <xacro:cam name="front_camera" parent="chassis" xyz="0 0 0.5" rpy="0 0 0" meshes="package://p3dx_description/meshes/camera" robot_namespace="$(arg robot_namespace)" />
 
 </robot>

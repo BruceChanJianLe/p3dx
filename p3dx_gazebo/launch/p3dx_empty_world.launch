@@ -11,9 +11,11 @@
     <arg name="gui" value="true"/>
     <arg name="headless" value="false"/>
     <arg name="debug" value="false"/>
+    <arg name="verbose" value="true"/>
   </include>
 
   <include file="$(find p3dx_gazebo)/launch/spawn_p3dx.launch">
+    <arg name="robot_namespace" value="pioneer"/>
     <!-- <arg name="laser_enabled" value="$(arg laser_enabled)"/> -->
     <!-- <arg name="kinect_enabled" value="$(arg kinect_enabled)"/> -->
   </include>

@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
 <!-- Camera -->
-<xacro:macro name="cam" params="name parent xyz rpy meshes">
+<xacro:macro name="cam" params="name parent xyz rpy meshes robot_namespace">
 
   <joint name="${parent}_${name}_joint" type="fixed">
       <axis xyz="0 0 1" />
@@ -61,7 +61,7 @@
         </noise>
       </camera>
       <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
-        <robotNamespace></robotNamespace>
+        <robotNamespace>${robot_namespace}</robotNamespace>
         <alwaysOn>true</alwaysOn>
         <updateRate>0.0</updateRate>
         <cameraName>${name}</cameraName>
