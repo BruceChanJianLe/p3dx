@@ -18,7 +18,6 @@
     <!-- For single master bringup, run robot control on the gazebo master -->
     <!-- Note that p3dx_description/description.launch is already included in p3dx_control/control.launch. -->
     <include file="$(find p3dx_control)/launch/control.launch">
-      <arg name="multimaster" value="$(arg multimaster)"/>
       <arg name="robot_namespace" value="$(arg robot_namespace)"/>
       <!-- <arg name="laser_enabled" value="$(arg laser_enabled)"/> -->
       <!-- <arg name="kinect_enabled" value="$(arg kinect_enabled)"/> -->
