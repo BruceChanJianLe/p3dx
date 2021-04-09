@@ -1,8 +1,10 @@
 p3dx_joint_publisher:
+# $(arg robot_namespace)/p3dx_joint_publisher:
   type: "joint_state_controller/JointStateController"
   publish_rate: 50
 
 RosAria:
+# # $(arg robot_namespace)/RosAria:
   type: "diff_drive_controller/DiffDriveController"
   left_wheel: 'left_hub_joint'
   right_wheel: 'right_hub_joint'
@@ -13,7 +15,10 @@ RosAria:
   velocity_rolling_window_size: 2
 
   # Base frame_id
-  base_frame_id: base_link
+  base_frame_id: $(arg robot_namespace)/base_link
+
+  # Odom fram_id
+  odom_frame_id: $(arg robot_namespace)/odom
 
   # Wheel separation and diameter. These are both optional.
   # diff_drive_controller will attempt to read either one or both from the
