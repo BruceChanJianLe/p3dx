@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <launch>
 
-  <arg name="multimaster" default="$(optenv ROBOT_MULTIMASTER false)"/>
-  <arg name="simulation" default="$(optenv ROBOT_SIMULATION false)"/>
   <arg name="robot_namespace" default="$(optenv ROBOT_NAMESPACE)"/>
 
   <arg name="config_extras"
@@ -11,13 +9,6 @@
   <!-- <arg name="laser_enabled" default="$(optenv P3DX_LMS1XX_ENABLED false)"/> -->
   <!-- <arg name="kinect_enabled" default="$(optenv P3DX_KINECT_ENABLED false)"/> -->
   <!-- <arg name="urdf_extras" default="$(optenv P3DX_URDF_EXTRAS)"/> -->
-
-  <include file="$(find multimaster_launch)/launch/multimaster_robot.launch" if="$(arg multimaster)">
-    <arg name="gazebo_interface" value="$(find p3dx_control)/config/gazebo_interface.yaml" />
-    <arg name="public_interface" value="$(find p3dx_control)/config/public_interface.yaml" />
-    <arg name="robot_namespace" value="$(arg robot_namespace)"/>
-    <arg name="simulation" value="$(arg simulation)"/>
-  </include>
 
   <!-- Load robot description -->
   <include file="$(find p3dx_description)/launch/description.launch" >
@@ -29,11 +20,8 @@
 
   <!-- Load controller configuration -->
   <rosparam command="load" file="$(find p3dx_control)/config/control.yaml" subst_value="True"/>
-  <!-- <rosparam command="load" file="$(find p3dx_control)/config/control.yaml"/> -->
 
   <!-- Spawn controllers -->
-  <!-- <node name="base_controller_spawner" pkg="controller_manager" type="spawner"
-        args="$(arg robot_namespace)/p3dx_joint_publisher $(arg robot_namespace)/RosAria"/> -->
       <node name="base_controller_spawner" pkg="controller_manager" type="spawner"
         args="--namespace=/$(arg robot_namespace)
               p3dx_joint_publisher
@@ -42,10 +30,7 @@
 
   <!-- Start EKF for localization -->
   <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
-    <!-- <arg name="robot_namespace" default="${arg robot_namespace)"/> -->
-    <!-- <rosparam param="robot_namespace" subst_value="True">$(arg robot_namespace)</rosparam> -->
     <rosparam command="load" file="$(find p3dx_control)/config/localization.yaml" subst_value="True"/>
-    <!-- <rosparam command="load" file="$(find p3dx_control)/config/localization.yaml"/> -->
   </node>
 
   <!-- Interactive marker to drive robot in RViz -->

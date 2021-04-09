@@ -1,14 +1,14 @@
 topics:
 - name    : $(arg robot_namespace)/interactive_marker
-  topic   : twist_marker_server/cmd_vel
+  topic   : $(arg robot_namespace)/twist_marker_server/cmd_vel
   timeout : 0.5
   priority: 8
-- name    : external
-  topic   : cmd_vel
+- name    : $(arg robot_namespace)/external
+  topic   : $(arg robot_namespace)/cmd_vel
   timeout : 0.5
   priority: 1
 locks:
-- name    : e_stop
-  topic   : e_stop
+- name    : $(arg robot_namespace)/e_stop
+  topic   : $(arg robot_namespace)/e_stop
   timeout : 0.0
   priority: 255
