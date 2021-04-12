@@ -34,4 +34,24 @@
     <!-- <arg name="kinect_enabled" value="$(arg kinect_enabled)"/> -->
   </include>
 
+  <include file="$(find p3dx_gazebo)/launch/spawn_p3dx.launch">
+    <arg name="robot_namespace" value="pioneer_c"/>
+    <arg name="x" value="2.0"/>
+    <arg name="y" value="0.0"/>
+    <arg name="z" value="0.01"/>
+    <arg name="yaw" value="0.0"/>
+    <!-- <arg name="laser_enabled" value="$(arg laser_enabled)"/> -->
+    <!-- <arg name="kinect_enabled" value="$(arg kinect_enabled)"/> -->
+  </include>
+
+  <include file="$(find p3dx_gazebo)/launch/spawn_p3dx.launch">
+    <arg name="robot_namespace" value="pioneer_d"/>
+    <arg name="x" value="2.0"/>
+    <arg name="y" value="2.0"/>
+    <arg name="z" value="0.01"/>
+    <arg name="yaw" value="0.0"/>
+    <!-- <arg name="laser_enabled" value="$(arg laser_enabled)"/> -->
+    <!-- <arg name="kinect_enabled" value="$(arg kinect_enabled)"/> -->
+  </include>
+
 </launch>
