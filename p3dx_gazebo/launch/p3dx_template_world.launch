@@ -2,8 +2,11 @@
 
 <launch>
 
+  <arg name="world_name" default="double_story_cafe_ver1-1"/>
+  <arg name="robot_namespace" default="pioneer"/>
+
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find p3dx_gazebo)/world/double_story_cafe_ver1-1.world"/>
+    <arg name="world_name" value="$(find p3dx_gazebo)/world/$(arg world_name).world"/>
     <arg name="paused" value="false"/>
     <arg name="use_sim_time" value="true"/>
     <arg name="gui" value="true"/>
