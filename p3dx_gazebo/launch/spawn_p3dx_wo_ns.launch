@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <arg name="robot_namespace" default="/"/>
+
+  <arg name="x" default="0.0"/>
+  <arg name="y" default="0.0"/>
+  <arg name="z" default="0.0"/>
+  <arg name="yaw" default="0.0"/>
+
+  <!-- <arg name="laser_enabled" default="$(optenv P3DX_LMS1XX_ENABLED false)"/> -->
+  <arg name="kinect_enabled" default="$(optenv P3DX_UR5_ENABLED false)"/>
+  <!-- <arg name="urdf_extras" default="$(optenv P3DX_URDF_EXTRAS)"/> -->
+
+  <!-- For single master bringup, run robot control on the gazebo master -->
+  <!-- Note that p3dx_description/description.launch is already included in p3dx_control/control.launch. -->
+  <include file="$(find p3dx_control)/launch/control_wo_ns.launch">
+    <arg name="robot_namespace" value="$(arg robot_namespace)"/>
+    <!-- <arg name="laser_enabled" value="$(arg laser_enabled)"/> -->
+    <!-- <arg name="kinect_enabled" value="$(arg kinect_enabled)"/> -->
+    <!-- <arg name="urdf_extras" value="$(arg urdf_extras)"/> -->
+  </include>
+
+  <!-- Spawn robot in gazebo -->
+  <node name="spawn_p3dx_model" pkg="gazebo_ros" type="spawn_model"
+      args="-x $(arg x)
+            -y $(arg y)
+            -z $(arg z)
+            -Y $(arg yaw)
+            -unpause
+            -urdf
+            -param robot_description
+            -model $(arg robot_namespace)" />
+
+</launch>
