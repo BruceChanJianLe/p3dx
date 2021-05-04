@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<launch>
+
+    <arg name="world_name" default="worlds/empty.world"/>
+
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(arg world_name)"/> <!-- world_name is wrt GAZEBO_RESOURCE_PATH environment variable -->
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+    <arg name="verbose" value="true"/>
+  </include>
+
+  <include file="$(find p3dx_gazebo)/launch/spawn_p3dx_wo_ns.launch">
+    <arg name="x" value="2.0"/>
+    <arg name="y" value="0.0"/>
+    <arg name="z" value="0.01"/>
+    <arg name="yaw" value="0.0"/>
+    <!-- <arg name="laser_enabled" value="$(arg laser_enabled)"/> -->
+    <!-- <arg name="kinect_enabled" value="$(arg kinect_enabled)"/> -->
+  </include>
+
+</launch>
