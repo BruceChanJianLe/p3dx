@@ -1,0 +1,21 @@
+global_costmap:
+    global_frame: map
+    update_frequency: 1.5       # Global Costmap can be updated at a slower frequency
+    publish_frequency: 1.0      # Global Costmap can be updated at a slower frequency
+    static_map: true
+    rolling_window: false
+    resolution: 0.05
+    transform_tolerance: 1.0
+    map_type: costmap
+ 
+    plugins:
+    - {name: static_layer,        type: "costmap_2d::StaticLayer"}
+    - {name: obstacle_layer,      type: "costmap_2d::VoxelLayer"}
+    - {name: inflation_layer,     type: "costmap_2d::InflationLayer"}
+ 
+
+# Other References
+# ================
+# url: http://wiki.ros.org/range_sensor_layer
+# url: http://wiki.ros.org/costmap_2d/Tutorials/Configuring%20Layered%20Costmaps
+# url: https://github.com/husky/husky/tree/kinetic-devel/husky_navigation/config

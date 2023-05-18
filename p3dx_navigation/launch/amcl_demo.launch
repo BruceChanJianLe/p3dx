@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- Use MBF -->
+  <arg name="use_mbf" default="false"/>
+
+  <!-- Run the map server -->
+  <arg name="map_file" default="playpen_map.yaml"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find p3dx_navigation)/maps/$(arg map_file).yaml" />
+  <arg name="scan_topic" default="$(eval optenv('P3DX_LASER_TOPIC', 'scan'))" />
+
+  <!--- Run AMCL -->
+  <include file="$(find p3dx_navigation)/launch/amcl.launch">
+    <arg name="scan_topic" value="$(arg scan_topic)" />
+  </include>
+
+  <!--- Run Move Base -->
+  <include if="$(eval use_mbf == false)" file="$(find p3dx_navigation)/launch/move_base.launch" />
+  <include if="$(eval use_mbf == true)" file="$(find p3dx_navigation)/launch/move_base_flex.launch" />
+
+</launch>

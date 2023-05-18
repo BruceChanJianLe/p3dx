@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="scan_topic" default="$(eval optenv('P3DX_LASER_TOPIC', 'scan'))" />
+
+  <!--- Run gmapping -->
+  <include file="$(find p3dx_navigation)/launch/gmapping.launch">
+    <arg name="scan_topic" value="$(arg scan_topic)" />
+  </include>
+
+  <!--- Run Move Base -->
+  <include file="$(find p3dx_navigation)/launch/move_base.launch" />
+
+</launch>

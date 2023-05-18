@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+  
+  <!--- Run Move Base -->  
+  <include file="$(find p3dx_navigation)/launch/move_base.launch">
+    <arg name="no_static_map" value="true"/>
+  </include>
+  
+</launch>

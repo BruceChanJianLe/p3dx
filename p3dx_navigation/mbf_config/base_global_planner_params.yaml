@@ -1,0 +1,26 @@
+# Planner selection
+# It appears that these params are not being used at all in move_base_flex,
+# only used when using the relay, but in our case we don't use the relay too.
+
+# base_global_planner: "navfn/NavfnROS"  
+# base_local_planner: "base_local_planner/TrajectoryPlannerROS"
+
+GlobalPlanner:                                  # Also see: http://wiki.ros.org/global_planner
+  old_navfn_behavior: false                     # Exactly mirror behavior of navfn, use defaults for other boolean parameters, default false
+  use_quadratic: true                           # Use the quadratic approximation of the potential. Otherwise, use a simpler calculation, default true
+  use_dijkstra: false                           # Use dijkstra's algorithm. Otherwise, A*, default true
+  use_grid_path: false                          # Create a path that follows the grid boundaries. Otherwise, use a gradient descent method, default false
+  
+NavfnROS:
+  allow_unknown: true                           # allow planner to plan through unknown space, default true
+  planner_window_x: 0.0                         # default 0.0
+  planner_window_y: 0.0                         # default 0.0
+  default_tolerance: 0.0                        # If goal in obstacle, plan to the closest point in radius default_tolerance, default 0.0
+
+
+# Other References
+# ================
+# url: http://wiki.ros.org/global_planner
+# url: http://wiki.ros.org/navfn
+# url: https://github.com/husky/husky/blob/kinetic-devel/husky_navigation/config/planner.yaml
+# url: http://wiki.ros.org/base_local_planner

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<launch>
+
+    <arg name="config" default="mbf_config" />
+
+    <node pkg="mbf_costmap_nav" type="mbf_costmap_nav" name="move_base_flex" respawn="false" output="screen" clear_params="true">
+
+        <!-- Costmap Common Params -->
+        <rosparam file="$(find p3dx_navigation)/$(arg config)/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+        <rosparam file="$(find p3dx_navigation)/$(arg config)/costmap_common_params.yaml" command="load" ns="local_costmap"/>
+
+        <!-- Local and Global Costmap Params -->
+        <rosparam file="$(find p3dx_navigation)/$(arg config)/local_costmap_params.yaml" command="load"/>
+        <rosparam file="$(find p3dx_navigation)/$(arg config)/global_costmap_params.yaml" command="load"/>
+
+        <!-- Base Global Planner -->
+        <rosparam file="$(find p3dx_navigation)/$(arg config)/base_global_planner_params.yaml" command="load"/>
+
+        <!-- Base Local Planner -->
+        <rosparam file="$(find p3dx_navigation)/$(arg config)/base_local_planner_params.yaml" command="load"/>
+
+        <!-- Move Base Params -->
+        <rosparam file="$(find p3dx_navigation)/$(arg config)/move_base_params.yaml" command="load"/>
+
+    </node>
+
+    <!-- Relays old move_base actions to the new mbf move_base action, similar but with richer result and feedback.
+    Also relay the simple goal topic published by RViz, the make_plan service and dynamic reconfiguration
+    calls (note that some parameters have changed names; see http://wiki.ros.org/move_base_flex for details) -->
+    <!-- <node name="move_base_legacy_relay" pkg="mbf_costmap_nav" type="move_base_legacy_relay.py"/> -->
+
+</launch>
+
