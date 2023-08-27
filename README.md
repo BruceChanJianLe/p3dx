@@ -13,3 +13,4 @@ Use the launch files starting with `multi` in `p3dx_gazebo` to launch multiple p
 - Multi robot references: https://answers.ros.org/question/267332/how-to-change-the-robot_description-paramter-for-the-joint_trajectory_controller/https://answers.ros.org/question/263415/simplest-multiple-robot-scenario/ https://answers.gazebosim.org//question/16497/spawning-multiple-robots-each-with-a-controller-in-the-same-namespace-as-the-controller_manager/  
 - libgazebo_ros_joint_state_publisher: https://github.com/ros-simulation/gazebo_ros_pkgs/blob/melodic-devel/gazebo_plugins/src/gazebo_ros_joint_state_publisher.cpp  
 - tf prefix: look at control.launch for more information
+- Multi Gazebo on same machine: https://answers.ros.org/question/193062/how-to-run-multiple-independent-gazebo-instances-on-the-same-machine/
