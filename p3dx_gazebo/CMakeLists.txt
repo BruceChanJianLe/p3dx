@@ -1,14 +1,8 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(p3dx_gazebo)
 
-find_package(catkin REQUIRED COMPONENTS roslaunch)
+find_package(ament_cmake REQUIRED)
 
-catkin_package()
-
-roslaunch_add_file_check(launch)
-
-install(
-  DIRECTORY launch world
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+install(DIRECTORY launch models worlds
+    DESTINATION share/${PROJECT_NAME}/
 )
-
