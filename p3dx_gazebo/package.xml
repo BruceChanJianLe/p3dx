@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package>
+<package format="2">
   <name>p3dx_gazebo</name>
   <version>2.0.0</version>
   <description>p3dx Gazebo world</description>
@@ -8,19 +8,16 @@
   <maintainer email="jianle001@e.ntu.edu.sg">brucechanjianle</maintainer>
 
   <license>MIT</license>
-
   <url type="website">github.com/brucechanjianle/p3dx</url>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>launch</depend>
   <depend>launch_ros</depend>
-  <depend>robot_state_publisher</depend>
-  <depend>xacro</depend>
+  <depend>ros_gz_sim</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
-    <gz_ros gz_sim_resource_path_path="${prefix}/models"/>
   </export>
 
 </package>
