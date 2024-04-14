@@ -1,0 +1,28 @@
+<?xml version='1.0'?>
+<sdf version="1.6">
+    <model name="charging_station">
+        <pose>0 0 0 0 0 0</pose>
+        <!-- BASE_LINK FRAME -->
+        <link name="charging_station_base_link">
+            <pose>0 0 0.05 0 0 -1.570796327</pose>
+            <collision name="charging_station_collision">
+                <pose>0 0 0.3 0 0 -1.570796327</pose>
+                <geometry>
+                    <box>
+                        <size>0.1 0.55 0.4</size>
+                    </box>
+                </geometry>
+            </collision>
+            <visual name="charging_station_visual">
+                <pose>0 0 0 0 0 0</pose>
+                <geometry>
+                    <mesh>
+                        <scale>1 1 1</scale>
+                        <uri>meshes/charging_station.dae</uri>
+                    </mesh>
+                </geometry>
+            </visual>
+        </link>
+        <static>1</static>
+    </model>
+</sdf>
