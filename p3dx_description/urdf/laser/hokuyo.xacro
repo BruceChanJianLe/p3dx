@@ -1,70 +1,104 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-<!-- Front Laser -->
-<xacro:macro name="laser" params="name parent xyz rpy meshes robot_namespace" >
+  <!-- Front Laser -->
+  <xacro:macro name="laser" params="gpu:=false name parent xyz rpy meshes robot_namespace">
 
-  <joint name="${parent}_${name}_joint" type="fixed">
+    <joint name="${parent}_${name}_joint" type="fixed">
       <axis xyz="0 0 1" />
-      <origin xyz="${xyz}" rpy="${rpy}"/>
-      <parent link="${parent}"/>
-      <child link="${name}"/>
+      <origin xyz="${xyz}" rpy="${rpy}" />
+      <parent link="${parent}" />
+      <child link="${name}" />
     </joint>
 
     <link name="${name}">
       <collision>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <box size="0.1 0.1 0.1"/>
+          <box size="0.1 0.1 0.1" />
         </geometry>
       </collision>
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="${meshes}/hokuyo.dae"/>
+          <mesh filename="${meshes}/hokuyo.dae" />
         </geometry>
       </visual>
       <inertial>
         <mass value="1e-5" />
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />
         <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
       </inertial>
     </link>
 
-    <gazebo reference="${name}">
-        <sensor name="laser" type="ray">
-        <pose>0 0 0 0 0 0</pose>
-          <ray>
+    <plugin filename="ignition-gazebo-sensors-system" name="ignition::gazebo::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <xacro:if value="${gpu}">
+      <gazebo reference="${name}">
+        <sensor name='gpu_lidar' type='gpu_lidar'>
+          <topic>scan</topic>
+          <update_rate>30</update_rate>
+          <ignition_frame_id>${name}</ignition_frame_id>
+          <lidar>
             <scan>
               <horizontal>
-                <!-- The Hokuyo UTM-30LX-EW Scanning Laser Rangefinder  has  683 steps with 0.35139 Degree resolution -->
+                <samples>683</samples>
                 <resolution>1</resolution>
                 <max_angle>1.8326</max_angle> <!-- 105 Degree -->
                 <min_angle>-1.8326</min_angle> <!-- -105 Degree -->
-                <samples>683</samples>
               </horizontal>
             </scan>
             <range>
               <min>0.08</min>
-              <max>30</max>
+              <max>30.0</max>
               <resolution>0.01</resolution>
             </range>
-          </ray>
-
-          <plugin name="laser" filename="libgazebo_ros_laser.so" >
-            <robotNamespace>${robot_namespace}</robotNamespace>
-            <topicName>scan</topicName>
-            <frameName>${name}</frameName>
-          </plugin>
-          <!--
-          <plugin name="laser" filename="libRayPlugin.so" />
-          -->
-
-          <always_on>1</always_on>
-          <update_rate>30</update_rate>
+            <noise>
+              <type>gaussian</type>
+              <mean>0.0</mean>
+              <stddev>0.001</stddev>
+            </noise>
+          </lidar>
+          <alwaysOn>1</alwaysOn>
           <visualize>true</visualize>
         </sensor>
-    </gazebo>
-</xacro:macro>
+      </gazebo>
+    </xacro:if>
+
+    <xacro:unless value="${gpu}">
+      <gazebo reference="${name}">
+        <sensor name='lidar' type='lidar'>
+          <topic>scan</topic>
+          <update_rate>30</update_rate>
+          <ignition_frame_id>${name}</ignition_frame_id>
+          <lidar>
+            <scan>
+              <horizontal>
+                <samples>683</samples>
+                <resolution>1</resolution>
+                <max_angle>1.8326</max_angle> <!-- 105 Degree -->
+                <min_angle>-1.8326</min_angle> <!-- -105 Degree -->
+              </horizontal>
+            </scan>
+            <range>
+              <min>0.08</min>
+              <max>30.0</max>
+              <resolution>0.01</resolution>
+            </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0.0</mean>
+              <stddev>0.001</stddev>
+            </noise>
+          </lidar>
+          <alwaysOn>1</alwaysOn>
+          <visualize>true</visualize>
+        </sensor>
+      </gazebo>
+    </xacro:unless>
+
+  </xacro:macro>
 
 </robot>
