@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <sdf version='1.7'>
-  <world name='world_demo'>
+  <world name='warehouse_world'>
     <gravity>0 0 -9.8</gravity>
     <physics type='ode'>
       <max_step_size>0.01</max_step_size>
@@ -140,7 +140,7 @@
           <property key="height" type="double">900</property>
           <property key="state" type="string">docked</property>
         </ignition-gui>
-        <topic>/model/tugbot/cmd_vel</topic>
+        <topic>/RosAria/cmd_vel</topic>
       </plugin>
     </gui>
 
