@@ -12,9 +12,9 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>launch</depend>
-  <depend>launch_ros</depend>
+  <depend>p3dx_description</depend>
   <depend>ros_gz_sim</depend>
+  <depend>ros_gz_bridge</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
