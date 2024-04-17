@@ -4,6 +4,9 @@ Pioneer-3dx robot has been [discontinued](https://www.generationrobots.com/en/40
 
 ## Multi Robots
 
+WARNING!!!
+This is not supported on ROS2 at the moment.
+
 Use the launch files starting with `multi` in `p3dx_gazebo` to launch multiple pioneer robots in gazebo. Note that the namespace should not have any numbers like `1` but use alphabets instead.
 
 ## Reference
