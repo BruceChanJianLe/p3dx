@@ -40,7 +40,7 @@
         <sensor name='gpu_lidar' type='gpu_lidar'>
           <topic>scan</topic>
           <update_rate>30</update_rate>
-          <ignition_frame_id>${name}</ignition_frame_id>
+          <gz_frame_id>${name}</gz_frame_id>
           <lidar>
             <scan>
               <horizontal>
@@ -72,7 +72,7 @@
         <sensor name='lidar' type='lidar'>
           <topic>scan</topic>
           <update_rate>30</update_rate>
-          <ignition_frame_id>${name}</ignition_frame_id>
+          <gz_frame_id>${name}</gz_frame_id>
           <lidar>
             <scan>
               <horizontal>

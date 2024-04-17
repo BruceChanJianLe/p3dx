@@ -41,7 +41,7 @@
       <sensor type="depth_camera" name="${name}">
         <update_rate>30.0</update_rate>
         <topic>${name}</topic>
-        <ignition_frame_id>${name}</ignition_frame_id>
+        <gz_frame_id>${name}</gz_frame_id>
         <camera_info_topic>${name}/camera_info</camera_info_topic>
         <camera>
           <horizontal_fov>1.3962634</horizontal_fov>
