@@ -68,11 +68,6 @@ def generate_launch_description():
         default_value='',
         description='Map file to load')
 
-    # declare_map_yaml_cmd = DeclareLaunchArgument(
-        # 'map_yaml_file',
-        # default_value='',
-        # description='Full path to map yaml file to load')
-
     declare_use_sim_time_cmd = DeclareLaunchArgument(
         'use_sim_time',
         default_value='false',
