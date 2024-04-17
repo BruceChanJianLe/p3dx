@@ -2,6 +2,25 @@
 
 Pioneer-3dx robot has been [discontinued](https://www.generationrobots.com/en/402395-robot-mobile-pioneer-3-dx.html), however, many universities and institutes are still using them for experiments. To facilitate the simulation in Gazebo for pioneer-3dx, I have decided to make some changes to [sidneyrdc](https://github.com/sidneyrdc/p3dx_gazebo) p3dx_gazebo. The purpose is to make it better and easier for other users to utilize it. I am aware that there are already many pioneer-3dx gazebo models out there, yet, they are not very well structured. Therefore, my attempt is to follow the [husky](https://github.com/husky) simulation structure to re-structure the simulation for pioneer-3dx.
 
+## Usage
+
+Starting the simulation
+```bash
+ros2 launch p3dx_gazebo p3dx_warehouse_world.launch.py
+```
+
+Starting amcl demo
+bash
+```
+ros2 launch p3dx_navigation amcl_demo.launch.py
+```
+
+Starting slam 2d demo, note that you can either launch amcl demo or slam 2d demo. But not both.
+bash
+```
+ros2 launch p3dx_navigation slam_2d_demo.launch.py
+```
+
 ## Multi Robots
 
 WARNING!!!
