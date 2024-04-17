@@ -8,7 +8,7 @@
   <maintainer email="jianle001@e.ntu.edu.sg">brucechanjianle</maintainer>
 
   <license>MIT</license>
-  <url type="website">github.com/brucechanjianle/p3dx</url>
+  <url type="website">https://github.com/brucechanjianle/p3dx</url>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
