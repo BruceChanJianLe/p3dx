@@ -7,8 +7,6 @@
   <xacro:include filename="pioneer3dx_wheel.xacro" />
   <xacro:include filename="pioneer3dx_swivel.xacro" />
   <xacro:include filename="pioneer3dx_sonar.xacro" />
-  <xacro:include filename="pioneer3dx_plugins.xacro" />
-  <xacro:pioneer3dx_plugins robot_namespace="$(arg robot_namespace)" />
 
   <xacro:macro name="pioneer3dx_body"
     params="name parent meshes robot_namespace odometry_source:=encoders">
