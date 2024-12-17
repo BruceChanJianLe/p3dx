@@ -28,6 +28,12 @@ bash
 ros2 launch p3dx_navigation slam_2d_demo.launch.py
 ```
 
+Starting Visualization
+bash
+```
+ros2 launch p3dx_viz view_robot.launch.py
+```
+
 ## Multi Robots
 
 WARNING!!!
