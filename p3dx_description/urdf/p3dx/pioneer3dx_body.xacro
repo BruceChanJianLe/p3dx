@@ -30,9 +30,6 @@
     <xacro:pioneer_wheel side="left"  parent="${name}"  xyz="0 0.15 0.09" rpy="0 0 0" radius="0.09" meshes="${meshes}"/>
     <xacro:pioneer_swivel parent="${name}"  xyz="-0.185 0 0.055" rpy="0 0 0" meshes="${meshes}"/>
 
-    <!-- Motor plugin -->
-    <!-- <xacro:pioneer3dx_diff_drive /> -->
-
     <!-- Joints plugin -->
     <!-- <xacro:pioneer3dx_joints_state_publisher /> -->
 

@@ -14,11 +14,11 @@ RosAria:
   cmd_vel_timeout: 0.25
   velocity_rolling_window_size: 2
 
-  # Base frame_id
-  base_frame_id: $(arg robot_namespace)/base_link
+  # Base frame_id (handled in launch file)
+  # base_frame_id: $(arg robot_namespace)/base_link
 
-  # Odom fram_id
-  odom_frame_id: $(arg robot_namespace)/odom
+  # Odom fram_id (declared in launch file)
+  # odom_frame_id: $(arg robot_namespace)/odom
 
   # Wheel separation and diameter. These are both optional.
   # diff_drive_controller will attempt to read either one or both from the
@@ -28,7 +28,8 @@ RosAria:
 
   # Odometry fused with IMU is published by robot_localization, so
   # no need to publish a TF based on encoders alone.
-  enable_odom_tf: true
+  # Use ekf package instead
+  enable_odom_tf: false
 
   # p3dx hardware provides wheel velocities
   estimate_velocity_from_position: false
@@ -51,4 +52,3 @@ RosAria:
       max_velocity           : 2.0   # rad/s
       has_acceleration_limits: true
       max_acceleration       : 6.0   # rad/s^2
-  

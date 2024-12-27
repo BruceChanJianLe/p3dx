@@ -20,18 +20,32 @@
 
   <!-- Load controller configuration -->
   <rosparam command="load" file="$(find p3dx_control)/config/control.yaml" subst_value="True"/>
+  <group if="$(eval arg('robot_namespace') == '/')">
+    <param name="RosAria/base_frame_id" value="base_link"/>
+    <param name="RosAria/odom_frame_id" value="odom"/>
+
+    <!-- Start EKF for localization without namespace -->
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
+      <rosparam command="load" file="$(find p3dx_control)/config/localization.yaml"/>
+    </node>
+  </group>
+  <group unless="$(eval arg('robot_namespace') == '/')">
+    <param name="RosAria/base_frame_id" value="$(arg robot_namespace)/base_link"/>
+    <param name="RosAria/odom_frame_id" value="$(arg robot_namespace)/odom"/>
+
+    <!-- Start EKF for localization with namespace -->
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
+      <rosparam command="load" file="$(find p3dx_control)/config/localization.yaml"/>
+        <param name="tf_prefix" value="$(arg robot_namespace)"/>
+    </node>
+  </group>
 
   <!-- Spawn controllers -->
-      <node name="base_controller_spawner" pkg="controller_manager" type="spawner"
-        args="--namespace=/$(arg robot_namespace)
-              p3dx_joint_publisher
-              RosAria">
-      </node>
-
-  <!-- Start EKF for localization -->
-  <!-- <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
-    <rosparam command="load" file="$(find p3dx_control)/config/localization.yaml" subst_value="True"/>
-  </node> -->
+  <node name="base_controller_spawner" pkg="controller_manager" type="spawner"
+    args="--namespace=/$(arg robot_namespace)
+          p3dx_joint_publisher
+          RosAria">
+  </node>
 
   <!-- Interactive marker to drive robot in RViz -->
   <node pkg="interactive_marker_twist_server" type="marker_server" name="twist_marker_server" output="screen">
