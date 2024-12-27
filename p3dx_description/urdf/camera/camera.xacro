@@ -66,8 +66,8 @@
           <updateRate>0.0</updateRate>
           <imageTopicName>image_raw</imageTopicName>
           <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+          <cameraName>${name}</cameraName>
           <xacro:if value="${robot_namespace != '/'}">
-            <cameraName>${robot_namespace}/${name}</cameraName>
             <frameName>${robot_namespace}/${name}</frameName>
           </xacro:if>
           <xacro:unless value="${robot_namespace != '/'}">
