@@ -16,8 +16,8 @@
   <xacro:laser name="laser" parent="chassis" xyz="0.16 0 0.1" rpy="0 0 0" meshes="package://p3dx_description/meshes/laser" robot_namespace="$(arg robot_namespace)"/>
 
   <!-- GPU Laser -->
-<!--  <xacro:include filename="$(find description_plugins)/test/multi_robot_scenario/urdf/laser/hokuyo_gpu.xacro"/>-->
-  <!--<xacro:laser_gpu name="front_laser2" parent="chassis" xyz="0.16 0 0.1" rpy="0 0 0" meshes="package://description_plugins/test/multi_robot_scenario/meshes/laser" />-->
+  <!-- <xacro:include filename="$(find p3dx_description)/urdf/laser/hokuyo_gpu.xacro"/> -->
+  <!-- <xacro:laser_gpu name="laser" parent="chassis" xyz="0.16 0 0.1" rpy="0 0 0" meshes="package://p3dx_description/meshes/laser" robot_namespace="$(arg robot_namespace)"/> -->
 
   <!-- Camera -->
   <xacro:include filename="$(find p3dx_description)/urdf/camera/camera.xacro"/>

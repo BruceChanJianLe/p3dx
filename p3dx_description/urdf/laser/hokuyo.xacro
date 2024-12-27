@@ -1,70 +1,73 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-<!-- Front Laser -->
-<xacro:macro name="laser" params="name parent xyz rpy meshes robot_namespace" >
+  <!-- Front Laser -->
+  <xacro:macro name="laser" params="name parent xyz rpy meshes robot_namespace">
 
-  <joint name="${parent}_${name}_joint" type="fixed">
+    <joint name="${parent}_${name}_joint" type="fixed">
       <axis xyz="0 0 1" />
-      <origin xyz="${xyz}" rpy="${rpy}"/>
-      <parent link="${parent}"/>
-      <child link="${name}"/>
+      <origin xyz="${xyz}" rpy="${rpy}" />
+      <parent link="${parent}" />
+      <child link="${name}" />
     </joint>
 
     <link name="${name}">
       <collision>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <box size="0.1 0.1 0.1"/>
+          <box size="0.1 0.1 0.1" />
         </geometry>
       </collision>
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="${meshes}/hokuyo.dae"/>
+          <mesh filename="${meshes}/hokuyo.dae" />
         </geometry>
       </visual>
       <inertial>
         <mass value="1e-5" />
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />
         <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
       </inertial>
     </link>
 
     <gazebo reference="${name}">
-        <sensor name="laser" type="ray">
+      <sensor name="laser" type="ray">
         <pose>0 0 0 0 0 0</pose>
-          <ray>
-            <scan>
-              <horizontal>
-                <!-- The Hokuyo UTM-30LX-EW Scanning Laser Rangefinder  has  683 steps with 0.35139 Degree resolution -->
-                <resolution>1</resolution>
-                <max_angle>1.8326</max_angle> <!-- 105 Degree -->
-                <min_angle>-1.8326</min_angle> <!-- -105 Degree -->
-                <samples>683</samples>
-              </horizontal>
-            </scan>
-            <range>
-              <min>0.08</min>
-              <max>30</max>
-              <resolution>0.01</resolution>
-            </range>
-          </ray>
+        <ray>
+          <scan>
+            <horizontal>
+              <!-- The Hokuyo UTM-30LX-EW Scanning Laser Rangefinder  has  683 steps with 0.35139
+              Degree resolution -->
+              <resolution>1</resolution>
+              <max_angle>1.8326</max_angle> <!-- 105 Degree -->
+              <min_angle>-1.8326</min_angle> <!-- -105 Degree -->
+              <samples>683</samples>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.08</min>
+            <max>30</max>
+            <resolution>0.01</resolution>
+          </range>
+        </ray>
 
-          <plugin name="laser" filename="libgazebo_ros_laser.so" >
-            <robotNamespace>${robot_namespace}</robotNamespace>
-            <topicName>scan</topicName>
+        <plugin name="laser" filename="libgazebo_ros_laser.so">
+          <robotNamespace>${robot_namespace}</robotNamespace>
+          <topicName>scan</topicName>
+          <xacro:if value="${robot_namespace != '/'}">
+            <frameName>${robot_namespace}/${name}</frameName>
+          </xacro:if>
+          <xacro:unless value="${robot_namespace != '/'}">
             <frameName>${name}</frameName>
-          </plugin>
-          <!--
-          <plugin name="laser" filename="libRayPlugin.so" />
-          -->
+          </xacro:unless>
+        </plugin>
 
-          <always_on>1</always_on>
-          <update_rate>30</update_rate>
-          <visualize>true</visualize>
-        </sensor>
+        <always_on>1</always_on>
+        <update_rate>30</update_rate>
+        <visualize>true</visualize>
+      </sensor>
     </gazebo>
-</xacro:macro>
+  </xacro:macro>
 
 </robot>
