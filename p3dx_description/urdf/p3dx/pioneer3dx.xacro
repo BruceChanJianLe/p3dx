@@ -23,4 +23,8 @@
   <xacro:include filename="$(find p3dx_description)/urdf/camera/camera.xacro"/>
   <xacro:cam name="front_camera" parent="chassis" xyz="0 0 0.5" rpy="0 0 0" meshes="package://p3dx_description/meshes/camera" robot_namespace="$(arg robot_namespace)" />
 
+  <!-- IMU -->
+  <xacro:include filename="$(find p3dx_description)/urdf/imu/imu.xacro"/>
+  <xacro:imu name="imu_link" parent="chassis" xyz="0 0 0" rpy="0 0 0"  robot_namespace="$(arg robot_namespace)" />
+
 </robot>
