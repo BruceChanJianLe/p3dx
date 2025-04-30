@@ -46,8 +46,14 @@
           <odom_topic>RosAria/odom</odom_topic>
           <tf_topic>/tf</tf_topic>
         </xacro:if>
-        <frame_id>odom</frame_id>
-        <child_frame_id>base_link</child_frame_id>
+        <xacro:if value="${robot_namespace == '/'}">
+          <frame_id>odom</frame_id>
+          <child_frame_id>base_link</child_frame_id>
+        </xacro:if>
+        <xacro:unless value="${robot_namespace == '/'}">
+          <frame_id>${robot_namespace}/odom</frame_id>
+          <child_frame_id>${robot_namespace}/base_link</child_frame_id>
+        </xacro:unless>
       </plugin>
     </gazebo>
 
@@ -56,8 +62,14 @@
         <plugin filename="libignition-gazebo6-odometry-publisher-system"
           name="ignition::gazebo::systems::OdometryPublisher">
           <odom_frame>odom</odom_frame>
-          <robot_base_frame>base_link</robot_base_frame>
-          <odom_topic>RosAria/odom</odom_topic>
+          <xacro:if value="${robot_namespace == '/'}">
+            <frame_id>odom</frame_id>
+            <child_frame_id>base_link</child_frame_id>
+          </xacro:if>
+          <xacro:unless value="${robot_namespace == '/'}">
+            <frame_id>${robot_namespace}/odom</frame_id>
+            <child_frame_id>${robot_namespace}/base_link</child_frame_id>
+          </xacro:unless>
           <tf_topic>/tf</tf_topic>
           <dimensions>2</dimensions>
           <odom_publish_frequency>50</odom_publish_frequency>
