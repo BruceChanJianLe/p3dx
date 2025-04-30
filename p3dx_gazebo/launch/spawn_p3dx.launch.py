@@ -20,11 +20,13 @@ def generate_launch_description():
   camera_enabled = LaunchConfiguration("camera_enabled", default=True)
   lidar_enabled = LaunchConfiguration("lidar_enabled", default=True)
   odometry_source = LaunchConfiguration("odometry_source", default="encoders")
+  robot_namespace = LaunchConfiguration("robot_namespace", default="")
 
   robot_state_publisher = Node(
     package="robot_state_publisher",
     executable="robot_state_publisher",
     name="robot_state_publisher",
+    namespace=robot_namespace,
     parameters=[
       {'robot_description': Command( \
       ['xacro ', join(p3dx_description_path, 'urdf/p3dx/pioneer3dx.xacro'),
@@ -33,15 +35,16 @@ def generate_launch_description():
       ' odometry_source:=', odometry_source,
       ])}],
     remappings=[
-        ('/joint_states', 'pioneer/joint_states'),
+        ('/joint_states', 'joint_states'),
     ]
   )
 
   gz_spawn_entity = Node(
     package="ros_gz_sim",
     executable="create",
+    namespace=robot_namespace,
     arguments=[
-      "-topic", "/robot_description",
+      "-topic", "robot_description",
       "-name", "pioneer",
       "-allow_renaming", "true",
       "-z", "0.28",
@@ -54,21 +57,22 @@ def generate_launch_description():
   gz_ros2_bridge = Node(
     package="ros_gz_bridge",
     executable="parameter_bridge",
+    namespace=robot_namespace,
     arguments=[
-        "/RosAria/cmd_vel@geometry_msgs/msg/Twist@ignition.msgs.Twist",
         "/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock",
-        "/RosAria/odom@nav_msgs/msg/Odometry[ignition.msgs.Odometry",
         "/tf@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V",
-        "/scan@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan",
-        "/camera@sensor_msgs/msg/Image[ignition.msgs.Image",
-        "/camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo",
-        # Note that world must be exactly the same as world name
+        "RosAria/cmd_vel@geometry_msgs/msg/Twist@ignition.msgs.Twist",
+        "RosAria/odom@nav_msgs/msg/Odometry[ignition.msgs.Odometry",
+        "scan@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan",
+        "camera@sensor_msgs/msg/Image[ignition.msgs.Image",
+        "camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo",
+
         PathJoinSubstitution(["/world", world_name , "model/pioneer/joint_state@sensor_msgs/msg/JointState[ignition.msgs.Model"])
       ],
     remappings=[
         # ('/RosAria/cmd_vel', '/cmd_vel'),
         # ('/RosAria/odom', '/odom'),
-        (PathJoinSubstitution(['/world', world_name, 'model/pioneer/joint_state']), 'pioneer/joint_states'),
+        (PathJoinSubstitution(['/world', world_name, 'model/pioneer/joint_state']), 'joint_states'),
       ]
    )
 
@@ -80,6 +84,7 @@ def generate_launch_description():
     DeclareLaunchArgument("x", default_value="0.0"),
     DeclareLaunchArgument("y", default_value="0.0"),
     DeclareLaunchArgument("yaw", default_value="0.0"),
+    DeclareLaunchArgument("robot_namespace", default_value=""),
     robot_state_publisher,
     gz_spawn_entity,
     gz_ros2_bridge
