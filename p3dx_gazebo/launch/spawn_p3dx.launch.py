@@ -4,10 +4,10 @@ from os.path import join
 from xacro import parse, process_doc
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
-from launch.substitutions import LaunchConfiguration, Command, PathJoinSubstitution
+from launch.substitutions import LaunchConfiguration, Command, PathJoinSubstitution, TextSubstitution, PythonExpression, EqualsSubstitution, NotEqualsSubstitution
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.conditions import IfCondition
 
 def generate_launch_description():
 
@@ -22,21 +22,49 @@ def generate_launch_description():
   odometry_source = LaunchConfiguration("odometry_source", default="encoders")
   robot_namespace = LaunchConfiguration("robot_namespace", default="")
 
+  robot_state_publisher_namespace = Node(
+    package="robot_state_publisher",
+    executable="robot_state_publisher",
+    name="robot_state_publisher",
+    namespace=robot_namespace,
+    parameters=[
+      {
+      'frame_prefix': [robot_namespace, TextSubstitution(text='/')],
+      'robot_description': Command( \
+      ['xacro ', join(p3dx_description_path, 'urdf/p3dx/pioneer3dx.xacro'),
+      ' camera_enabled:=', camera_enabled,
+      ' lidar_enabled:=', lidar_enabled,
+      ' odometry_source:=', odometry_source,
+      ' robot_namespace:=', robot_namespace,
+      ])}],
+    remappings=[
+        ('/joint_states', 'joint_states'),
+    ],
+    condition=IfCondition(
+        NotEqualsSubstitution(LaunchConfiguration('robot_namespace'), "")
+    )
+  )
+
   robot_state_publisher = Node(
     package="robot_state_publisher",
     executable="robot_state_publisher",
     name="robot_state_publisher",
     namespace=robot_namespace,
     parameters=[
-      {'robot_description': Command( \
+      {
+      'robot_description': Command( \
       ['xacro ', join(p3dx_description_path, 'urdf/p3dx/pioneer3dx.xacro'),
       ' camera_enabled:=', camera_enabled,
       ' lidar_enabled:=', lidar_enabled,
       ' odometry_source:=', odometry_source,
+      ' robot_namespace:=', robot_namespace,
       ])}],
     remappings=[
         ('/joint_states', 'joint_states'),
-    ]
+    ],
+    condition=IfCondition(
+        EqualsSubstitution(LaunchConfiguration('robot_namespace'), "")
+    )
   )
 
   gz_spawn_entity = Node(
@@ -86,6 +114,7 @@ def generate_launch_description():
     DeclareLaunchArgument("yaw", default_value="0.0"),
     DeclareLaunchArgument("robot_namespace", default_value=""),
     robot_state_publisher,
+    robot_state_publisher_namespace,
     gz_spawn_entity,
     gz_ros2_bridge
   ])
