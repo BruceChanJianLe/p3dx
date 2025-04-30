@@ -67,6 +67,24 @@ def generate_launch_description():
     )
   )
 
+  # gz_spawn_entity_namespace = Node(
+  #   package="ros_gz_sim",
+  #   executable="create",
+  #   namespace=robot_namespace,
+  #   arguments=[
+  #     "-topic", "robot_description",
+  #     "-name", robot_namespace,
+  #     "-allow_renaming", "true",
+  #     "-z", "0.28",
+  #     "-x", x,
+  #     "-y", y,
+  #     "-Y", yaw
+  #   ],
+  #   condition=IfCondition(
+  #       NotEqualsSubstitution(LaunchConfiguration('robot_namespace'), "")
+  #   )
+  # )
+
   gz_spawn_entity = Node(
     package="ros_gz_sim",
     executable="create",
@@ -79,7 +97,10 @@ def generate_launch_description():
       "-x", x,
       "-y", y,
       "-Y", yaw
-    ]
+    ],
+    # condition=IfCondition(
+    #     EqualsSubstitution(LaunchConfiguration('robot_namespace'), "")
+    # )
   )
 
   gz_ros2_bridge = Node(
@@ -116,6 +137,7 @@ def generate_launch_description():
     robot_state_publisher,
     robot_state_publisher_namespace,
     gz_spawn_entity,
+    # gz_spawn_entity_namespace,
     gz_ros2_bridge
   ])
 from launch_ros.actions import Node
