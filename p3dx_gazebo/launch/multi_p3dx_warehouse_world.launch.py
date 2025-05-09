@@ -34,6 +34,7 @@ def generate_launch_description():
     }.items()
   )
 
+  # Must have for multi robot
   # Handle the general gazebo topics
   gz_ros2_bridge_general = Node(
     package="ros_gz_bridge",
@@ -44,7 +45,6 @@ def generate_launch_description():
         "/tf@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V",
       ],
   )
-
 
   # pioneer a
   spawn_p3dx_pioneer_a = IncludeLaunchDescription(

@@ -128,6 +128,8 @@ def generate_launch_description():
     )
   )
 
+  # # Must have for multi robot, include this in the multi robot launch file
+  # # Handle the general gazebo topics
   # gz_ros2_bridge_general_namespace = Node(
   #   package="ros_gz_bridge",
   #   executable="parameter_bridge",
