@@ -106,11 +106,8 @@ def generate_launch_description():
   gz_ros2_bridge_namespace = Node(
     package="ros_gz_bridge",
     executable="parameter_bridge",
-    name=[LaunchConfiguration('robot_namespace'), TextSubstitution(text='_gz_bridge')],
-    # namespace=robot_namespace,
+    namespace=robot_namespace,
     arguments=[
-        "/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock",
-        "/tf@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V",
         PathJoinSubstitution([robot_namespace, "RosAria/cmd_vel@geometry_msgs/msg/Twist@ignition.msgs.Twist"]),
         PathJoinSubstitution([robot_namespace, "RosAria/odom@nav_msgs/msg/Odometry[ignition.msgs.Odometry"]),
         PathJoinSubstitution([robot_namespace, "scan@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan"]),
@@ -119,14 +116,30 @@ def generate_launch_description():
         PathJoinSubstitution(["/world", world_name , "model", robot_namespace, "joint_state@sensor_msgs/msg/JointState[ignition.msgs.Model"])
       ],
     remappings=[
-        # ('/RosAria/cmd_vel', '/cmd_vel'),
-        # ('/RosAria/odom', '/odom'),
-        (PathJoinSubstitution(['/world', world_name, 'model', robot_namespace, 'joint_state']), PathJoinSubstitution([robot_namespace, 'joint_states'])),
+        (PathJoinSubstitution(['/', robot_namespace, robot_namespace, 'RosAria/cmd_vel']),      'RosAria/cmd_vel'),
+        (PathJoinSubstitution(['/', robot_namespace, robot_namespace, 'RosAria/odom']),         'RosAria/odom'),
+        (PathJoinSubstitution(['/', robot_namespace, robot_namespace, 'scan']),                 'scan'),
+        (PathJoinSubstitution(['/', robot_namespace, robot_namespace, 'camera']),               'camera'),
+        (PathJoinSubstitution(['/', robot_namespace, robot_namespace, 'camera/camera_info']),   'camera/camera_info'),
+        (PathJoinSubstitution(['/world', world_name, 'model', robot_namespace, 'joint_state']), 'joint_states'),
       ],
     condition=IfCondition(
         NotEqualsSubstitution(LaunchConfiguration('robot_namespace'), "")
     )
   )
+
+  # gz_ros2_bridge_general_namespace = Node(
+  #   package="ros_gz_bridge",
+  #   executable="parameter_bridge",
+  #   name="ros_gz_bridge_general",
+  #   arguments=[
+  #       "/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock",
+  #       "/tf@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V",
+  #     ],
+  #   condition=IfCondition(
+  #       NotEqualsSubstitution(LaunchConfiguration('robot_namespace'), "")
+  #   )
+  # )
 
   gz_ros2_bridge = Node(
     package="ros_gz_bridge",
@@ -166,5 +179,6 @@ def generate_launch_description():
     gz_spawn_entity_namespace,
     gz_ros2_bridge,
     gz_ros2_bridge_namespace,
+    # gz_ros2_bridge_general_namespace,
   ])
 from launch_ros.actions import Node

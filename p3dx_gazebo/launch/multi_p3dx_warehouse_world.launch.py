@@ -34,6 +34,18 @@ def generate_launch_description():
     }.items()
   )
 
+  # Handle the general gazebo topics
+  gz_ros2_bridge_general = Node(
+    package="ros_gz_bridge",
+    executable="parameter_bridge",
+    name="ros_gz_bridge_general",
+    arguments=[
+        "/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock",
+        "/tf@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V",
+      ],
+  )
+
+
   # pioneer a
   spawn_p3dx_pioneer_a = IncludeLaunchDescription(
     PythonLaunchDescriptionSource(join(this_package_path, "launch", "spawn_p3dx.launch.py")),
@@ -86,4 +98,5 @@ def generate_launch_description():
     gz_sim,
     spawn_p3dx_pioneer_a,
     spawn_p3dx_pioneer_b,
+    gz_ros2_bridge_general,
   ])
