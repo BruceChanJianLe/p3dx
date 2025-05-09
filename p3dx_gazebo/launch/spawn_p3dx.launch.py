@@ -67,23 +67,23 @@ def generate_launch_description():
     )
   )
 
-  # gz_spawn_entity_namespace = Node(
-  #   package="ros_gz_sim",
-  #   executable="create",
-  #   namespace=robot_namespace,
-  #   arguments=[
-  #     "-topic", "robot_description",
-  #     "-name", robot_namespace,
-  #     "-allow_renaming", "true",
-  #     "-z", "0.28",
-  #     "-x", x,
-  #     "-y", y,
-  #     "-Y", yaw
-  #   ],
-  #   condition=IfCondition(
-  #       NotEqualsSubstitution(LaunchConfiguration('robot_namespace'), "")
-  #   )
-  # )
+  gz_spawn_entity_namespace = Node(
+    package="ros_gz_sim",
+    executable="create",
+    namespace=robot_namespace,
+    arguments=[
+      "-topic", "robot_description",
+      "-name", robot_namespace,
+      "-allow_renaming", "true",
+      "-z", "0.28",
+      "-x", x,
+      "-y", y,
+      "-Y", yaw
+    ],
+    condition=IfCondition(
+        NotEqualsSubstitution(LaunchConfiguration('robot_namespace'), "")
+    )
+  )
 
   gz_spawn_entity = Node(
     package="ros_gz_sim",
@@ -98,12 +98,12 @@ def generate_launch_description():
       "-y", y,
       "-Y", yaw
     ],
-    # condition=IfCondition(
-    #     EqualsSubstitution(LaunchConfiguration('robot_namespace'), "")
-    # )
+    condition=IfCondition(
+        EqualsSubstitution(LaunchConfiguration('robot_namespace'), "")
+    )
   )
 
-  gz_ros2_bridge = Node(
+  gz_ros2_bridge_namespace = Node(
     package="ros_gz_bridge",
     executable="parameter_bridge",
     name=[LaunchConfiguration('robot_namespace'), TextSubstitution(text='_gz_bridge')],
@@ -116,14 +116,40 @@ def generate_launch_description():
         PathJoinSubstitution([robot_namespace, "scan@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan"]),
         PathJoinSubstitution([robot_namespace, "camera@sensor_msgs/msg/Image[ignition.msgs.Image"]),
         PathJoinSubstitution([robot_namespace, "camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo"]),
+        PathJoinSubstitution(["/world", world_name , "model", robot_namespace, "joint_state@sensor_msgs/msg/JointState[ignition.msgs.Model"])
+      ],
+    remappings=[
+        # ('/RosAria/cmd_vel', '/cmd_vel'),
+        # ('/RosAria/odom', '/odom'),
+        (PathJoinSubstitution(['/world', world_name, 'model', robot_namespace, 'joint_state']), PathJoinSubstitution([robot_namespace, 'joint_states'])),
+      ],
+    condition=IfCondition(
+        NotEqualsSubstitution(LaunchConfiguration('robot_namespace'), "")
+    )
+  )
+
+  gz_ros2_bridge = Node(
+    package="ros_gz_bridge",
+    executable="parameter_bridge",
+    arguments=[
+        "/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock",
+        "/tf@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V",
+        "/RosAria/cmd_vel@geometry_msgs/msg/Twist@ignition.msgs.Twist",
+        "/RosAria/odom@nav_msgs/msg/Odometry[ignition.msgs.Odometry",
+        "/scan@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan",
+        "/camera@sensor_msgs/msg/Image[ignition.msgs.Image",
+        "/camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo",
         PathJoinSubstitution(["/world", world_name , "model/pioneer/joint_state@sensor_msgs/msg/JointState[ignition.msgs.Model"])
       ],
     remappings=[
         # ('/RosAria/cmd_vel', '/cmd_vel'),
         # ('/RosAria/odom', '/odom'),
-        (PathJoinSubstitution(['/world', world_name, 'model/pioneer/joint_state']), PathJoinSubstitution([robot_namespace, 'joint_states'])),
-      ]
-   )
+        (PathJoinSubstitution(['/world', world_name, 'model/pioneer/joint_state']), 'joint_states'),
+      ],
+    condition=IfCondition(
+        EqualsSubstitution(LaunchConfiguration('robot_namespace'), "")
+    )
+  )
 
   return LaunchDescription([
     DeclareLaunchArgument("world_name", default_value=world_name),
@@ -137,7 +163,8 @@ def generate_launch_description():
     robot_state_publisher,
     robot_state_publisher_namespace,
     gz_spawn_entity,
-    # gz_spawn_entity_namespace,
-    gz_ros2_bridge
+    gz_spawn_entity_namespace,
+    gz_ros2_bridge,
+    gz_ros2_bridge_namespace,
   ])
 from launch_ros.actions import Node
