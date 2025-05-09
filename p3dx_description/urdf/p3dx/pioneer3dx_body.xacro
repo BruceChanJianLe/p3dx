@@ -41,10 +41,21 @@
         <wheel_separation>${0.3 + 0.01}</wheel_separation>
         <wheel_radius>${0.09+0.01}</wheel_radius>
         <odom_publish_frequency>50</odom_publish_frequency>
-        <topic>RosAria/cmd_vel</topic>
+        <xacro:if value="${robot_namespace == '/'}">
+          <topic>RosAria/cmd_vel</topic>
+        </xacro:if>
+        <xacro:unless value="${robot_namespace == '/'}">
+          <topic>${robot_namespace}/RosAria/cmd_vel</topic>
+        </xacro:unless>
         <xacro:if value="${odometry_source == 'encoders'}">
-          <odom_topic>RosAria/odom</odom_topic>
-          <tf_topic>/tf</tf_topic>
+          <xacro:if value="${robot_namespace == '/'}">
+            <odom_topic>RosAria/odom</odom_topic>
+            <tf_topic>/tf</tf_topic>
+          </xacro:if>
+          <xacro:unless value="${robot_namespace == '/'}">
+            <odom_topic>${robot_namespace}/RosAria/odom</odom_topic>
+            <tf_topic>/tf</tf_topic>
+          </xacro:unless>
         </xacro:if>
         <xacro:if value="${robot_namespace == '/'}">
           <frame_id>odom</frame_id>
