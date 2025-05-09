@@ -106,22 +106,22 @@ def generate_launch_description():
   gz_ros2_bridge = Node(
     package="ros_gz_bridge",
     executable="parameter_bridge",
-    namespace=robot_namespace,
+    name=[LaunchConfiguration('robot_namespace'), TextSubstitution(text='_gz_bridge')],
+    # namespace=robot_namespace,
     arguments=[
         "/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock",
         "/tf@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V",
-        "RosAria/cmd_vel@geometry_msgs/msg/Twist@ignition.msgs.Twist",
-        "RosAria/odom@nav_msgs/msg/Odometry[ignition.msgs.Odometry",
-        "scan@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan",
-        "camera@sensor_msgs/msg/Image[ignition.msgs.Image",
-        "camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo",
-
+        PathJoinSubstitution([robot_namespace, "RosAria/cmd_vel@geometry_msgs/msg/Twist@ignition.msgs.Twist"]),
+        PathJoinSubstitution([robot_namespace, "RosAria/odom@nav_msgs/msg/Odometry[ignition.msgs.Odometry"]),
+        PathJoinSubstitution([robot_namespace, "scan@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan"]),
+        PathJoinSubstitution([robot_namespace, "camera@sensor_msgs/msg/Image[ignition.msgs.Image"]),
+        PathJoinSubstitution([robot_namespace, "camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo"]),
         PathJoinSubstitution(["/world", world_name , "model/pioneer/joint_state@sensor_msgs/msg/JointState[ignition.msgs.Model"])
       ],
     remappings=[
         # ('/RosAria/cmd_vel', '/cmd_vel'),
         # ('/RosAria/odom', '/odom'),
-        (PathJoinSubstitution(['/world', world_name, 'model/pioneer/joint_state']), 'joint_states'),
+        (PathJoinSubstitution(['/world', world_name, 'model/pioneer/joint_state']), PathJoinSubstitution([robot_namespace, 'joint_states'])),
       ]
    )
 
