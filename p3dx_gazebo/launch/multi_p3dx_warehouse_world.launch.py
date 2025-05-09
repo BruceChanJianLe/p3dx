@@ -49,6 +49,21 @@ def generate_launch_description():
     }.items()
   )
 
+  # pioneer b
+  spawn_p3dx_pioneer_b = IncludeLaunchDescription(
+    PythonLaunchDescriptionSource(join(this_package_path, "launch", "spawn_p3dx.launch.py")),
+    launch_arguments={
+      'robot_namespace' : 'pioneer_b',
+      'world_name' : world_name,
+      'camera_enabled' : camera_enabled,
+      'lidar_enabled' : lidar_enabled,
+      'odometry_source' : odometry_source,
+      'x' : '10.0',
+      'y' : y,
+      'yaw' : yaw,
+    }.items()
+  )
+
   return LaunchDescription([
 
     AppendEnvironmentVariable(
@@ -70,4 +85,5 @@ def generate_launch_description():
     DeclareLaunchArgument("yaw", default_value=yaw),
     gz_sim,
     spawn_p3dx_pioneer_a,
+    spawn_p3dx_pioneer_b,
   ])
