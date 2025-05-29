@@ -38,9 +38,15 @@
     <xacro:if value="${gpu}">
       <gazebo reference="${name}">
         <sensor name='gpu_lidar' type='gpu_lidar'>
-          <topic>scan</topic>
+          <xacro:if value="${robot_namespace == '/'}">
+            <topic>scan</topic>
+            <gz_frame_id>${name}</gz_frame_id>
+          </xacro:if>
+          <xacro:unless value="${robot_namespace == '/'}">
+            <topic>${robot_namespace}/scan</topic>
+            <gz_frame_id>${robot_namespace}/${name}</gz_frame_id>
+          </xacro:unless>
           <update_rate>30</update_rate>
-          <gz_frame_id>${name}</gz_frame_id>
           <lidar>
             <scan>
               <horizontal>
@@ -70,9 +76,15 @@
     <xacro:unless value="${gpu}">
       <gazebo reference="${name}">
         <sensor name='lidar' type='lidar'>
-          <topic>scan</topic>
+          <xacro:if value="${robot_namespace == '/'}">
+            <topic>scan</topic>
+            <gz_frame_id>${name}</gz_frame_id>
+          </xacro:if>
+          <xacro:unless value="${robot_namespace == '/'}">
+            <topic>${robot_namespace}/scan</topic>
+            <gz_frame_id>${robot_namespace}/${name}</gz_frame_id>
+          </xacro:unless>
           <update_rate>30</update_rate>
-          <gz_frame_id>${name}</gz_frame_id>
           <lidar>
             <scan>
               <horizontal>

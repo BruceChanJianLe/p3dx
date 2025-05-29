@@ -15,11 +15,15 @@ def generate_launch_description():
     PythonLaunchDescriptionSource(join(this_package_path, "launch", "localization.launch.py")),
     launch_arguments={
       "map_name" : "warehouse_world",
+      "robot_namespace" : "pioneer_a",
     }.items()
   )
 
   navigation_launch = IncludeLaunchDescription(
     PythonLaunchDescriptionSource(join(this_package_path, "launch", "navigation.launch.py")),
+    launch_arguments={
+      "robot_namespace" : "pioneer_a",
+    }.items()
   )
 
   return LaunchDescription([

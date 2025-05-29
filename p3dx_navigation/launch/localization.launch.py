@@ -8,18 +8,18 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, GroupAction, SetEnvironmentVariable
 from launch.conditions import IfCondition
-from launch.substitutions import LaunchConfiguration, PythonExpression
-from launch_ros.actions import LoadComposableNodes
-from launch_ros.actions import Node
+from launch.substitutions import LaunchConfiguration, PythonExpression, EqualsSubstitution, NotEqualsSubstitution
+from launch_ros.actions import LoadComposableNodes, Node, PushRosNamespace
 from launch_ros.descriptions import ComposableNode, ParameterFile
-from nav2_common.launch import RewrittenYaml
+from nav2_common.launch import RewrittenYaml, ReplaceString
 
 
 def generate_launch_description():
     # Get the launch directory
     this_package_path = get_package_share_directory('p3dx_navigation')
 
-    namespace = LaunchConfiguration('namespace')
+    # namespace = LaunchConfiguration('namespace')
+    robot_namespace = LaunchConfiguration("robot_namespace", default="")
     map_name = LaunchConfiguration('map_name')
     map_yaml_file = LaunchConfiguration('map_yaml_file', default=[join(this_package_path, "maps/"), map_name, ".yaml"])
     use_sim_time = LaunchConfiguration('use_sim_time')
@@ -27,7 +27,7 @@ def generate_launch_description():
     params_file = LaunchConfiguration('params_file')
     use_composition = LaunchConfiguration('use_composition')
     container_name = LaunchConfiguration('container_name')
-    container_name_full = (namespace, '/', container_name)
+    container_name_full = (robot_namespace, '/', container_name)
     use_respawn = LaunchConfiguration('use_respawn')
     log_level = LaunchConfiguration('log_level')
 
@@ -39,18 +39,32 @@ def generate_launch_description():
     # https://github.com/ros/robot_state_publisher/pull/30
     # TODO(orduno) Substitute with `PushNodeRemapping`
     #              https://github.com/ros2/launch_ros/issues/56
-    remappings = [('/tf', 'tf'),
-                  ('/tf_static', 'tf_static')]
+    # remappings = [('/tf', 'tf'),
+    #               ('/tf_static', 'tf_static')]
 
     # Create our own temporary YAML files that include substitutions
     param_substitutions = {
         'use_sim_time': use_sim_time,
         'yaml_filename': map_yaml_file}
 
+    params_file = ReplaceString(
+        source_file=params_file,
+        replacements={'<tf_prefix>': (robot_namespace, '/') },
+        condition=IfCondition(
+            NotEqualsSubstitution(LaunchConfiguration('robot_namespace'), "")),
+        )
+
+    params_file = ReplaceString(
+        source_file=params_file,
+        replacements={'<tf_prefix>': (robot_namespace) },
+        condition=IfCondition(
+            EqualsSubstitution(LaunchConfiguration('robot_namespace'), "")),
+        )
+
     configured_params = ParameterFile(
         RewrittenYaml(
             source_file=params_file,
-            root_key=namespace,
+            root_key=robot_namespace,
             param_rewrites=param_substitutions,
             convert_types=True),
         allow_substs=True)
@@ -59,7 +73,7 @@ def generate_launch_description():
         'RCUTILS_LOGGING_BUFFERED_STREAM', '1')
 
     declare_namespace_cmd = DeclareLaunchArgument(
-        'namespace',
+        'robot_namespace',
         default_value='',
         description='Top-level namespace')
 
@@ -101,6 +115,11 @@ def generate_launch_description():
     load_nodes = GroupAction(
         condition=IfCondition(PythonExpression(['not ', use_composition])),
         actions=[
+            PushRosNamespace(
+                condition=IfCondition(
+                    NotEqualsSubstitution(LaunchConfiguration('robot_namespace'), "")),
+                namespace=robot_namespace),
+
             Node(
                 package='nav2_map_server',
                 executable='map_server',
@@ -110,7 +129,8 @@ def generate_launch_description():
                 respawn_delay=2.0,
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings),
+                ),
+                # remappings=remappings),
             Node(
                 package='nav2_amcl',
                 executable='amcl',
@@ -120,7 +140,8 @@ def generate_launch_description():
                 respawn_delay=2.0,
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings),
+                ),
+                # remappings=remappings),
             Node(
                 package='nav2_lifecycle_manager',
                 executable='lifecycle_manager',
@@ -142,13 +163,15 @@ def generate_launch_description():
                 plugin='nav2_map_server::MapServer',
                 name='map_server',
                 parameters=[configured_params],
-                remappings=remappings),
+                ),
+                # remappings=remappings),
             ComposableNode(
                 package='nav2_amcl',
                 plugin='nav2_amcl::AmclNode',
                 name='amcl',
                 parameters=[configured_params],
-                remappings=remappings),
+                ),
+                # remappings=remappings),
             ComposableNode(
                 package='nav2_lifecycle_manager',
                 plugin='nav2_lifecycle_manager::LifecycleManager',

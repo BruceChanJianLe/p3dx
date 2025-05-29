@@ -5,24 +5,24 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, GroupAction, SetEnvironmentVariable
 from launch.conditions import IfCondition
-from launch.substitutions import LaunchConfiguration, PythonExpression
-from launch_ros.actions import LoadComposableNodes
-from launch_ros.actions import Node
+from launch.substitutions import LaunchConfiguration, PythonExpression, EqualsSubstitution, NotEqualsSubstitution
+from launch_ros.actions import LoadComposableNodes, Node, PushRosNamespace
 from launch_ros.descriptions import ComposableNode, ParameterFile
-from nav2_common.launch import RewrittenYaml
+from nav2_common.launch import RewrittenYaml, ReplaceString
 
 
 def generate_launch_description():
     # Get the launch directory
     this_package_path = get_package_share_directory('p3dx_navigation')
 
-    namespace = LaunchConfiguration('namespace')
+    # namespace = LaunchConfiguration('namespace')
+    robot_namespace = LaunchConfiguration("robot_namespace", default="")
     use_sim_time = LaunchConfiguration('use_sim_time')
     autostart = LaunchConfiguration('autostart')
     params_file = LaunchConfiguration('params_file')
     use_composition = LaunchConfiguration('use_composition')
     container_name = LaunchConfiguration('container_name')
-    container_name_full = (namespace, '/', container_name)
+    container_name_full = (robot_namespace, '/', container_name)
     use_respawn = LaunchConfiguration('use_respawn')
     log_level = LaunchConfiguration('log_level')
 
@@ -40,19 +40,35 @@ def generate_launch_description():
     # https://github.com/ros/robot_state_publisher/pull/30
     # TODO(orduno) Substitute with `PushNodeRemapping`
     #              https://github.com/ros2/launch_ros/issues/56
-    remappings = [('/tf', 'tf'),
-                  ('/cmd_vel', '/RosAria/cmd_vel'),
-                  ('/tf_static', 'tf_static')]
+    remappings = [
+            # ('/tf', 'tf'),
+            ('cmd_vel', 'RosAria/cmd_vel'),
+            # ('/tf_static', 'tf_static')
+            ]
 
     # Create our own temporary YAML files that include substitutions
     param_substitutions = {
         'use_sim_time': use_sim_time,
         'autostart': autostart}
 
+    params_file = ReplaceString(
+        source_file=params_file,
+        replacements={'<tf_prefix>': (robot_namespace, '/') },
+        condition=IfCondition(
+            NotEqualsSubstitution(LaunchConfiguration('robot_namespace'), "")),
+        )
+
+    params_file = ReplaceString(
+        source_file=params_file,
+        replacements={'<tf_prefix>': (robot_namespace) },
+        condition=IfCondition(
+            EqualsSubstitution(LaunchConfiguration('robot_namespace'), "")),
+        )
+
     configured_params = ParameterFile(
         RewrittenYaml(
             source_file=params_file,
-            root_key=namespace,
+            root_key=robot_namespace,
             param_rewrites=param_substitutions,
             convert_types=True),
         allow_substs=True)
@@ -61,7 +77,7 @@ def generate_launch_description():
         'RCUTILS_LOGGING_BUFFERED_STREAM', '1')
 
     declare_namespace_cmd = DeclareLaunchArgument(
-        'namespace',
+        'robot_namespace',
         default_value='',
         description='Top-level namespace')
 
@@ -98,6 +114,11 @@ def generate_launch_description():
     load_nodes = GroupAction(
         condition=IfCondition(PythonExpression(['not ', use_composition])),
         actions=[
+            PushRosNamespace(
+                condition=IfCondition(
+                    NotEqualsSubstitution(LaunchConfiguration('robot_namespace'), "")),
+                namespace=robot_namespace),
+
             Node(
                 package='nav2_controller',
                 executable='controller_server',
@@ -106,7 +127,9 @@ def generate_launch_description():
                 respawn_delay=2.0,
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings + [('cmd_vel', 'cmd_vel_nav')]),
+                remappings=remappings,),
+                # ),
+                # remappings=remappings + [('cmd_vel', 'cmd_vel_nav')]),
             Node(
                 package='nav2_smoother',
                 executable='smoother_server',
@@ -116,6 +139,7 @@ def generate_launch_description():
                 respawn_delay=2.0,
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
+                # ),
                 remappings=remappings),
             Node(
                 package='nav2_planner',
@@ -127,6 +151,7 @@ def generate_launch_description():
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings),
+                # ),
             Node(
                 package='nav2_behaviors',
                 executable='behavior_server',
@@ -137,6 +162,7 @@ def generate_launch_description():
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings),
+                # ),
             Node(
                 package='nav2_bt_navigator',
                 executable='bt_navigator',
@@ -147,6 +173,7 @@ def generate_launch_description():
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings),
+                # ),
             Node(
                 package='nav2_waypoint_follower',
                 executable='waypoint_follower',
@@ -157,6 +184,7 @@ def generate_launch_description():
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings),
+                # ),
             Node(
                 package='nav2_velocity_smoother',
                 executable='velocity_smoother',
@@ -166,8 +194,10 @@ def generate_launch_description():
                 respawn_delay=2.0,
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings +
-                        [('cmd_vel', 'cmd_vel_nav'), ('cmd_vel_smoothed', 'cmd_vel')]),
+                remappings=remappings),
+                # ),
+                # remappings=remappings +
+                #         [('cmd_vel', 'cmd_vel_nav'), ('cmd_vel_smoothed', 'cmd_vel')]),
             Node(
                 package='nav2_lifecycle_manager',
                 executable='lifecycle_manager',
@@ -189,44 +219,51 @@ def generate_launch_description():
                 plugin='nav2_controller::ControllerServer',
                 name='controller_server',
                 parameters=[configured_params],
-                remappings=remappings + [('cmd_vel', 'cmd_vel_nav')]),
+                ),
+                # remappings=remappings + [('cmd_vel', 'cmd_vel_nav')]),
             ComposableNode(
                 package='nav2_smoother',
                 plugin='nav2_smoother::SmootherServer',
                 name='smoother_server',
                 parameters=[configured_params],
-                remappings=remappings),
+                ),
+                # remappings=remappings),
             ComposableNode(
                 package='nav2_planner',
                 plugin='nav2_planner::PlannerServer',
                 name='planner_server',
                 parameters=[configured_params],
-                remappings=remappings),
+                ),
+                # remappings=remappings),
             ComposableNode(
                 package='nav2_behaviors',
                 plugin='behavior_server::BehaviorServer',
                 name='behavior_server',
                 parameters=[configured_params],
-                remappings=remappings),
+                ),
+                # remappings=remappings),
             ComposableNode(
                 package='nav2_bt_navigator',
                 plugin='nav2_bt_navigator::BtNavigator',
                 name='bt_navigator',
                 parameters=[configured_params],
-                remappings=remappings),
+                ),
+                # remappings=remappings),
             ComposableNode(
                 package='nav2_waypoint_follower',
                 plugin='nav2_waypoint_follower::WaypointFollower',
                 name='waypoint_follower',
                 parameters=[configured_params],
-                remappings=remappings),
+                ),
+                # remappings=remappings),
             ComposableNode(
                 package='nav2_velocity_smoother',
                 plugin='nav2_velocity_smoother::VelocitySmoother',
                 name='velocity_smoother',
                 parameters=[configured_params],
-                remappings=remappings +
-                           [('cmd_vel', 'cmd_vel_nav'), ('cmd_vel_smoothed', 'cmd_vel')]),
+                ),
+                # remappings=remappings +
+                #            [('cmd_vel', 'cmd_vel_nav'), ('cmd_vel_smoothed', 'cmd_vel')]),
             ComposableNode(
                 package='nav2_lifecycle_manager',
                 plugin='nav2_lifecycle_manager::LifecycleManager',
