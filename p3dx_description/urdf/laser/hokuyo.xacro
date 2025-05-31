@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
   <!-- Front Laser -->
-  <xacro:macro name="laser" params="gpu:=false name parent xyz rpy meshes robot_namespace">
+  <xacro:macro name="laser" params="gpu:=false scan:=scan name parent xyz rpy meshes robot_namespace">
 
     <joint name="${parent}_${name}_joint" type="fixed">
       <axis xyz="0 0 1" />
@@ -37,9 +37,9 @@
 
     <xacro:if value="${gpu}">
       <gazebo reference="${name}">
-        <sensor name='gpu_lidar' type='gpu_lidar'>
+        <sensor name='gpu_lidar_${name}' type='gpu_lidar'>
           <xacro:if value="${robot_namespace == '/'}">
-            <topic>scan</topic>
+          <topic>${scan}</topic>
             <gz_frame_id>${name}</gz_frame_id>
           </xacro:if>
           <xacro:unless value="${robot_namespace == '/'}">
@@ -52,8 +52,8 @@
               <horizontal>
                 <samples>683</samples>
                 <resolution>1</resolution>
-                <max_angle>1.8326</max_angle> <!-- 105 Degree -->
-                <min_angle>-1.8326</min_angle> <!-- -105 Degree -->
+                <max_angle>3.14159</max_angle>
+                <min_angle>-3.14159</min_angle>
               </horizontal>
             </scan>
             <range>
@@ -75,13 +75,13 @@
 
     <xacro:unless value="${gpu}">
       <gazebo reference="${name}">
-        <sensor name='lidar' type='lidar'>
+        <sensor name='lidar_${name}' type='lidar'>
           <xacro:if value="${robot_namespace == '/'}">
-            <topic>scan</topic>
+            <topic>${scan}</topic>
             <gz_frame_id>${name}</gz_frame_id>
           </xacro:if>
           <xacro:unless value="${robot_namespace == '/'}">
-            <topic>${robot_namespace}/scan</topic>
+            <topic>${robot_namespace}/${scan}</topic>
             <gz_frame_id>${robot_namespace}/${name}</gz_frame_id>
           </xacro:unless>
           <update_rate>30</update_rate>
@@ -90,8 +90,8 @@
               <horizontal>
                 <samples>683</samples>
                 <resolution>1</resolution>
-                <max_angle>1.8326</max_angle> <!-- 105 Degree -->
-                <min_angle>-1.8326</min_angle> <!-- -105 Degree -->
+                <max_angle>3.14159</max_angle>
+                <min_angle>-3.14159</min_angle>
               </horizontal>
             </scan>
             <range>
