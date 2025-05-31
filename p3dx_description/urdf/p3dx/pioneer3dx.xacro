@@ -19,9 +19,43 @@
   <!-- Laser  -->
   <xacro:if value="$(arg lidar_enabled)">
     <xacro:include filename="$(find p3dx_description)/urdf/laser/hokuyo.xacro" />
-    <xacro:laser name="laser" parent="chassis" xyz="0.16 0 0.1" rpy="0 0 0"
+
+    <xacro:laser name="laser0" parent="chassis" xyz="0.16 0.0 0.28" rpy="0 0 0"
       meshes="file://$(find p3dx_description)/meshes/laser" robot_namespace="$(arg robot_namespace)"
-      gpu="true" />
+      gpu="true" scan="scan0"/>
+
+    <xacro:laser name="laser1" parent="chassis" xyz="0.16 0.16 0.28" rpy="0 0 0"
+      meshes="file://$(find p3dx_description)/meshes/laser" robot_namespace="$(arg robot_namespace)"
+      gpu="true" scan="scan1"/>
+
+    <xacro:laser name="laser2" parent="chassis" xyz="0.0 0.16 0.28" rpy="0 0 0"
+      meshes="file://$(find p3dx_description)/meshes/laser" robot_namespace="$(arg robot_namespace)"
+      gpu="true" scan="scan2"/>
+
+    <xacro:laser name="laser3" parent="chassis" xyz="-0.16 0.16 0.28" rpy="0 0 0"
+      meshes="file://$(find p3dx_description)/meshes/laser" robot_namespace="$(arg robot_namespace)"
+      gpu="true" scan="scan3"/>
+
+    <xacro:laser name="laser4" parent="chassis" xyz="-0.16 0.0 0.28" rpy="0 0 0"
+      meshes="file://$(find p3dx_description)/meshes/laser" robot_namespace="$(arg robot_namespace)"
+      gpu="true" scan="scan4"/>
+
+    <xacro:laser name="laser5" parent="chassis" xyz="-0.16 -0.16 0.28" rpy="0 0 0"
+      meshes="file://$(find p3dx_description)/meshes/laser" robot_namespace="$(arg robot_namespace)"
+      gpu="true" scan="scan5"/>
+
+    <xacro:laser name="laser6" parent="chassis" xyz="0.0 -0.16 0.28" rpy="0 0 0"
+      meshes="file://$(find p3dx_description)/meshes/laser" robot_namespace="$(arg robot_namespace)"
+      gpu="true" scan="scan6"/>
+
+    <xacro:laser name="laser7" parent="chassis" xyz="0.16 -0.16 0.28" rpy="0 0 0"
+      meshes="file://$(find p3dx_description)/meshes/laser" robot_namespace="$(arg robot_namespace)"
+      gpu="true" scan="scan7"/>
+
+    <xacro:laser name="laser8" parent="chassis" xyz="0.0 0.0 0.38" rpy="0 0 0"
+      meshes="file://$(find p3dx_description)/meshes/laser" robot_namespace="$(arg robot_namespace)"
+      gpu="true" scan="scan8"/>
+
   </xacro:if>
 
   <!-- GPU Laser -->
