@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-
-<launch>
-
-  <!-- <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />  -->
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find p3dx_viz)/rviz/robot.rviz" output="screen"/>
-
-</launch>

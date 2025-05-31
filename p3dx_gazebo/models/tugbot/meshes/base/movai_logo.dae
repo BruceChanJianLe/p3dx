@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <asset>
+    <contributor>
+      <author>Blender User</author>
+      <authoring_tool>Blender 3.0.1 commit date:2022-01-25, commit time:17:19, hash:dc2d18018171</authoring_tool>
+    </contributor>
+    <created>2022-01-27T15:06:10</created>
+    <modified>2022-01-27T15:06:10</modified>
+    <unit name="meter" meter="1"/>
+    <up_axis>Z_UP</up_axis>
+  </asset>
+  <library_effects>
+    <effect id="movai-logo-effect">
+      <profile_COMMON>
+        <newparam sid="movai-logo_png-surface">
+          <surface type="2D">
+            <init_from>movai-logo_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="movai-logo_png-sampler">
+          <sampler2D>
+            <source>movai-logo_png-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <lambert>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <diffuse>
+              <texture texture="movai-logo_png-sampler" texcoord="UVMap"/>
+            </diffuse>
+            <index_of_refraction>
+              <float sid="ior">1.45</float>
+            </index_of_refraction>
+          </lambert>
+        </technique>
+      </profile_COMMON>
+    </effect>
+  </library_effects>
+  <library_images>
+    <image id="movai-logo_png" name="movai-logo_png">
+      <init_from>movai-logo.png</init_from>
+    </image>
+  </library_images>
+  <library_materials>
+    <material id="movai-logo-material" name="movai-logo">
+      <instance_effect url="#movai-logo-effect"/>
+    </material>
+  </library_materials>
+  <library_geometries>
+    <geometry id="movai-logo-mesh" name="movai-logo">
+      <mesh>
+        <source id="movai-logo-mesh-positions">
+          <float_array id="movai-logo-mesh-positions-array" count="12">0.1726142 1.539973 8.099745 3.3269 1.539973 8.099745 0.1726142 2.539973 8.099745 3.3269 2.539973 8.099745</float_array>
+          <technique_common>
+            <accessor source="#movai-logo-mesh-positions-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="movai-logo-mesh-normals">
+          <float_array id="movai-logo-mesh-normals-array" count="3">0 0 1</float_array>
+          <technique_common>
+            <accessor source="#movai-logo-mesh-normals-array" count="1" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="movai-logo-mesh-map-0">
+          <float_array id="movai-logo-mesh-map-0-array" count="12">1 0 0 1 0 0 1 0 1 1 0 1</float_array>
+          <technique_common>
+            <accessor source="#movai-logo-mesh-map-0-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="movai-logo-mesh-vertices">
+          <input semantic="POSITION" source="#movai-logo-mesh-positions"/>
+        </vertices>
+        <triangles material="movai-logo-material" count="2">
+          <input semantic="VERTEX" source="#movai-logo-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#movai-logo-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#movai-logo-mesh-map-0" offset="2" set="0"/>
+          <p>1 0 0 2 0 1 0 0 2 1 0 3 3 0 4 2 0 5</p>
+        </triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_visual_scenes>
+    <visual_scene id="Scene" name="Scene">
+      <node id="movai-logo" name="movai-logo" type="NODE">
+        <matrix sid="transform">-1.94712e-9 -0.03630977 0.02580401 0 0.04454488 -1.58715e-9 1.12793e-9 0 0 0.02580401 0.03630977 2.98023e-8 0 0 0 1</matrix>
+        <instance_geometry url="#movai-logo-mesh" name="movai-logo">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="movai-logo-material" target="#movai-logo-material">
+                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#Scene"/>
+  </scene>
+</COLLADA>
