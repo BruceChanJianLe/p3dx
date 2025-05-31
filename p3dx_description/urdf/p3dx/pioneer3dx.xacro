@@ -19,7 +19,7 @@
   <!-- Laser  -->
   <xacro:if value="$(arg lidar_enabled)">
     <xacro:include filename="$(find p3dx_description)/urdf/laser/hokuyo.xacro" />
-    <xacro:laser name="laser" parent="chassis" xyz="0.16 0 0.1" rpy="0 0 0"
+    <xacro:laser name="laser" parent="chassis" xyz="0.16 0 0.28" rpy="0 0 0"
       meshes="file://$(find p3dx_description)/meshes/laser" robot_namespace="$(arg robot_namespace)"
       gpu="true" />
   </xacro:if>
