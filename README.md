@@ -9,6 +9,22 @@
 > they are not very well structured. Therefore, my attempt is to follow the [husky](https://github.com/husky)
 > simulation structure to re-structure the simulation for pioneer-3dx.
 
+## Build
+
+Create new workspace and clone p3dx package.  
+```bash
+mkdir sim_ws/src -p
+cd sim_ws/src
+git clone git@github.com:BruceChanJianLe/p3dx.git
+```
+
+Install dependencies and build it!  
+```bash
+cd sim_ws
+rosdep install --from-paths src --ignore-src -r -y
+colcon build
+```
+
 ## Usage
 
 Start the simulation  
