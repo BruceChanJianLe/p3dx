@@ -10,10 +10,10 @@ slam_toolbox:
     ceres_loss_function: None
 
     # ROS Parameters
-    odom_frame: odom
-    map_frame: map
-    base_frame: base_link
-    scan_topic: /scan
+    odom_frame: <tf_prefix>odom
+    map_frame: <tf_prefix>map
+    base_frame: <tf_prefix>base_link
+    scan_topic: scan
     use_map_saver: true
     mode: mapping #localization
 
