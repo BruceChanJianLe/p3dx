@@ -50,7 +50,10 @@ def generate_launch_description():
 
     configured_params = (
         RewrittenYaml(
-            source_file=rviz_config_file, root_key="", param_rewrites={}, convert_types=True
+            source_file=rviz_config_file,
+            root_key="",
+            param_rewrites={},
+            convert_types=True,
         ),
     )
 
