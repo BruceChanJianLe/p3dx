@@ -37,7 +37,8 @@ Start amcl demo
 ros2 launch p3dx_navigation amcl_demo.launch.py
 ```
 
-Start slam 2d demo, note that you can either launch amcl demo or slam 2d demo. But not both.  
+Start slam 2d demo, note that you can either launch amcl demo or slam 2d demo.
+But NOT both.  
 ``` bash
 ros2 launch p3dx_navigation slam_2d_demo.launch.py
 ```
@@ -50,8 +51,6 @@ ros2 launch p3dx_viz view_robot.launch.py
 ## Multi Robots
 
 Great news multi-robot is now supported!!!  
-However, only `amcl_demo.launch` is supported, the `slam_2d_demo.launch` is still on its way.  
-
 
 Use the launch files starting with `multi` in `p3dx_gazebo` to launch multiple pioneer robots in gazebo.  
 Note that the robot_namespace should not have any numbers like `1` but use alphabets instead.  
@@ -69,6 +68,13 @@ ros2 launch p3dx_navigation amcl_demo.launch.py robot_namespace:=pioneer_a
 Starting amcl demo for pioneer_b  
 ``` bash
 ros2 launch p3dx_navigation amcl_demo.launch.py robot_namespace:=pioneer_b
+```
+
+Alternatively, you can also start the online 2d slam,
+note that you can either launch amcl demo or slam 2d demo. But NOT both.  
+``` bash
+ros2 launch p3dx_navigation slam_2d_demo.launch.py robot_namespace:=pioneer_a
+ros2 launch p3dx_navigation slam_2d_demo.launch.py robot_namespace:=pioneer_b
 ```
 
 start visualization for pionner_a  
