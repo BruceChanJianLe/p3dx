@@ -16,4 +16,5 @@ Step 3: ```ros2 launch p3dx_gazebo p3dx_warehouse_world.launch.py```
 Step 4: ```ros2 launch p3dx_navigation slam_2d_demo.launch.py```
 
 This is the line that runs the actual code (make sure to replace with your specific file path): 
+
 Step 5: ```python3 /home/user/ros2_ws/sim_ws/src/p3dx/p3dx_gazebo/scripts/cover_2.py```
