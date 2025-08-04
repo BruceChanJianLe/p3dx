@@ -7,9 +7,9 @@ This code is operational for one tugbot, but has the potential for extrapolation
 
 How to Run: 
 
-Step 1: ```bash colcon build```
+Step 1: ```colcon build```
 
-Step 2: ```bash source install/setup.bash```
+Step 2: ```source install/setup.bash```
 
 Step 3: ```ros2 launch p3dx_gazebo p3dx_warehouse_world.launch.py```
 
