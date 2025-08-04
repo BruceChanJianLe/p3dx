@@ -13,7 +13,7 @@ Step 2: ```git clone https://github.com/BruceChanJianLe/p3dx.git```
 
 To return back one step in your hierarchy: 
 
-Step 3: ```cd ..``
+Step 3: ```cd ..```
 
 Step 4: ```colcon build```
 
