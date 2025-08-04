@@ -7,7 +7,7 @@ This code is operational for one tugbot, but has the potential for extrapolation
 
 How to Run: 
 
-Step 1: ```cd sim_ws/src```
+Step 1: ```cd ros2_ws/sim_ws/src```
 
 Step 2: ```git clone https://github.com/BruceChanJianLe/p3dx.git```
 
