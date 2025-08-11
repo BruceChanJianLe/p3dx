@@ -1,83 +1,40 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <!-- Front Laser -->
-  <xacro:macro name="imu" params="name parent xyz rpy robot_namespace">
+  <!-- IMU -->
+  <xacro:macro name="imu_sensor" params="name parent xyz rpy robot_namespace">
 
-    <link name="${name}" />
-
-    <joint name="${name}_joint" type="fixed">
+    <joint name="${parent}_${name}_joint" type="fixed">
+      <axis xyz="0 0 1" />
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent}" />
       <child link="${name}" />
     </joint>
 
-    <!-- reference: https://classic.gazebosim.org/tutorials?tut=ros_gzplugins -->
+    <!-- IMU -->
+    <link name="${name}">
+      <inertial>
+        <mass value="1e-5" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+      </inertial>
+    </link>
+
     <gazebo reference="${name}">
-      <sensor name="imu_sensor" type="imu">
-        <always_on>true</always_on>
+      <sensor type="imu" name="${name}">
+        <always_on>1</always_on>
         <update_rate>100</update_rate>
-        <visualize>true</visualize>
-        <topic>__default_topic__</topic>
-        <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
-          <topicName>imu/data</topicName>
-          <bodyName>${name}</bodyName>
-          <updateRateHZ>10.0</updateRateHZ>
-          <gaussianNoise>0.0</gaussianNoise>
-          <xyzOffset>0 0 0</xyzOffset>
-          <rpyOffset>0 0 0</rpyOffset>
-          <xacro:if value="${robot_namespace != '/'}">
-            <frameName>${robot_namespace}/${name}</frameName>
-          </xacro:if>
-          <xacro:unless value="${robot_namespace != '/'}">
-            <frameName>${name}</frameName>
-          </xacro:unless>
-          <initialOrientationAsReference>false</initialOrientationAsReference>
-        </plugin>
-        <pose>0 0 0 0 0 0</pose>
+        <visualize>false</visualize>
+        <xacro:if value="${robot_namespace == '/'}">
+          <gz_frame_id>${name}</gz_frame_id>
+          <topic>imu/data</topic>
+        </xacro:if>
+        <xacro:unless value="${robot_namespace == '/'}">
+          <gz_frame_id>${robot_namespace}/${name}</gz_frame_id>
+          <topic>${robot_namespace}/imu/data</topic>
+        </xacro:unless>
       </sensor>
-
-      <!-- <sensor name="imu_sensor" type="imu"> -->
-      <!--   <pose>0 0 0 0 0 0</pose> -->
-      <!--   <update_rate>100</update_rate> -->
-      <!--   <imu> -->
-      <!--     <angular_velocity> -->
-      <!--       <x>0.01</x> -->
-      <!--       <y>0.01</y> -->
-      <!--       <z>0.01</z> -->
-      <!--     </angular_velocity> -->
-      <!--     <linear_acceleration> -->
-      <!--       <x>0.01</x> -->
-      <!--       <y>0.01</y> -->
-      <!--       <z>0.01</z> -->
-      <!--     </linear_acceleration> -->
-      <!--   </imu> -->
-      <!--   <plugin name="imu_controller" filename="libhector_gazebo_ros_imu.so"> -->
-      <!--     <robotNamespace>${robot_namespace}</robotNamespace> -->
-      <!--     <updateRate>50.0</updateRate> -->
-      <!--     <bodyName>${name}</bodyName> -->
-      <!--     <topicName>imu/data</topicName> -->
-      <!--     <accelDrift>0.005 0.005 0.005</accelDrift> -->
-      <!--     <accelGaussianNoise>0.005 0.005 0.005</accelGaussianNoise> -->
-      <!--     <rateDrift>0.005 0.005 0.005 </rateDrift> -->
-      <!--     <rateGaussianNoise>0.005 0.005 0.005 </rateGaussianNoise> -->
-      <!--     <headingDrift>0.005</headingDrift> -->
-      <!--     <headingGaussianNoise>0.005</headingGaussianNoise> -->
-      <!--   </plugin> -->
-      <!-- </sensor> -->
-
-      <!-- <plugin name="laser" filename="libgazebo_ros_laser.so"> -->
-      <!--   <robotNamespace>${robot_namespace}</robotNamespace> -->
-      <!--   <topicName>scan</topicName> -->
-      <!--   <xacro:if value="${robot_namespace != '/'}"> -->
-      <!--     <frameName>${robot_namespace}/${name}</frameName> -->
-      <!--   </xacro:if> -->
-      <!--   <xacro:unless value="${robot_namespace != '/'}"> -->
-      <!--     <frameName>${name}</frameName> -->
-      <!--   </xacro:unless> -->
-      <!-- </plugin> -->
-
     </gazebo>
-  </xacro:macro>
 
+  </xacro:macro>
 </robot>
