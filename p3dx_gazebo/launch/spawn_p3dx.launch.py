@@ -151,29 +151,32 @@ def generate_launch_description():
             PathJoinSubstitution(
                 [
                     robot_namespace,
-                    "RosAria/cmd_vel@geometry_msgs/msg/Twist@ignition.msgs.Twist",
+                    "RosAria/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist",
                 ]
             ),
             PathJoinSubstitution(
                 [
                     robot_namespace,
-                    "RosAria/odom@nav_msgs/msg/Odometry[ignition.msgs.Odometry",
+                    "RosAria/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry",
                 ]
             ),
             PathJoinSubstitution(
                 [
                     robot_namespace,
-                    "scan@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan",
+                    "scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
                 ]
             ),
             PathJoinSubstitution(
-                [robot_namespace, "camera@sensor_msgs/msg/Image[ignition.msgs.Image"]
+                [robot_namespace, "camera@sensor_msgs/msg/Image[gz.msgs.Image"]
             ),
             PathJoinSubstitution(
                 [
                     robot_namespace,
-                    "camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo",
+                    "camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
                 ]
+            ),
+            PathJoinSubstitution(
+                [robot_namespace, "imu/data@sensor_msgs/msg/Imu[gz.msgs.IMU"]
             ),
             PathJoinSubstitution(
                 [
@@ -181,7 +184,7 @@ def generate_launch_description():
                     world_name,
                     "model",
                     robot_namespace,
-                    "joint_state@sensor_msgs/msg/JointState[ignition.msgs.Model",
+                    "joint_state@sensor_msgs/msg/JointState[gz.msgs.Model",
                 ]
             ),
         ],
@@ -213,6 +216,10 @@ def generate_launch_description():
                 "camera/camera_info",
             ),
             (
+                PathJoinSubstitution(["/", robot_namespace, robot_namespace, "imu/data"]),
+                "imu/data",
+            ),
+            (
                 PathJoinSubstitution(
                     ["/world", world_name, "model", robot_namespace, "joint_state"]
                 ),
@@ -231,8 +238,8 @@ def generate_launch_description():
     #   executable="parameter_bridge",
     #   name="ros_gz_bridge_general",
     #   arguments=[
-    #       "/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock",
-    #       "/tf@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V",
+    #       "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
+    #       "/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",
     #     ],
     #   condition=IfCondition(
     #       NotEqualsSubstitution(LaunchConfiguration('robot_namespace'), "")
@@ -243,18 +250,19 @@ def generate_launch_description():
         package="ros_gz_bridge",
         executable="parameter_bridge",
         arguments=[
-            "/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock",
-            "/tf@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V",
-            "/RosAria/cmd_vel@geometry_msgs/msg/Twist@ignition.msgs.Twist",
-            "/RosAria/odom@nav_msgs/msg/Odometry[ignition.msgs.Odometry",
-            "/scan@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan",
-            "/camera@sensor_msgs/msg/Image[ignition.msgs.Image",
-            "/camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo",
+            "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
+            "/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",
+            "/RosAria/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist",
+            "/RosAria/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry",
+            "/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
+            "/camera@sensor_msgs/msg/Image[gz.msgs.Image",
+            "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+            "/imu/data@sensor_msgs/msg/Imu[gz.msgs.IMU",
             PathJoinSubstitution(
                 [
                     "/world",
                     world_name,
-                    "model/pioneer/joint_state@sensor_msgs/msg/JointState[ignition.msgs.Model",
+                    "model/pioneer/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model",
                 ]
             ),
         ],
