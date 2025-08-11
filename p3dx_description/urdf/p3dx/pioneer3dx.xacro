@@ -33,9 +33,15 @@
 
   <!-- Camera -->
   <xacro:if value="$(arg camera_enabled)">
-  <xacro:include filename="$(find p3dx_description)/urdf/camera/camera.xacro" />
-  <xacro:cam name="front_camera" parent="chassis" xyz="0 0 0.5" rpy="0 0 0"
-    meshes="file://$(find p3dx_description)/meshes/camera" robot_namespace="$(arg robot_namespace)" />
+    <xacro:include filename="$(find p3dx_description)/urdf/camera/camera.xacro" />
+    <xacro:cam name="front_camera" parent="chassis" xyz="0 0 0.5" rpy="0 0 0"
+      meshes="file://$(find p3dx_description)/meshes/camera"
+      robot_namespace="$(arg robot_namespace)" />
   </xacro:if>
+
+  <!-- IMU -->
+  <xacro:include filename="$(find p3dx_description)/urdf/imu/imu.xacro" />
+  <xacro:imu_sensor name="imu" parent="chassis" xyz="0 0 0" rpy="0 0 0"
+    robot_namespace="$(arg robot_namespace)" />
 
 </robot>

@@ -2,7 +2,8 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
   <!-- Front Laser -->
-  <xacro:macro name="laser" params="gpu:=false scan:=scan name parent xyz rpy meshes robot_namespace">
+  <xacro:macro name="laser"
+    params="gpu:=false scan:=scan name parent xyz rpy meshes robot_namespace">
 
     <joint name="${parent}_${name}_joint" type="fixed">
       <axis xyz="0 0 1" />
@@ -31,23 +32,24 @@
       </inertial>
     </link>
 
-    <plugin filename="ignition-gazebo-sensors-system" name="ignition::gazebo::systems::Sensors">
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
       <render_engine>ogre2</render_engine>
     </plugin>
 
     <xacro:if value="${gpu}">
       <gazebo reference="${name}">
-        <sensor name='gpu_lidar_${name}' type='gpu_lidar'>
+        <sensor name='${name}' type='gpu_lidar'>
           <xacro:if value="${robot_namespace == '/'}">
-          <topic>${scan}</topic>
+            <topic>${scan}</topic>
             <gz_frame_id>${name}</gz_frame_id>
           </xacro:if>
           <xacro:unless value="${robot_namespace == '/'}">
             <topic>${robot_namespace}/scan</topic>
             <gz_frame_id>${robot_namespace}/${name}</gz_frame_id>
           </xacro:unless>
+          <pose>0 0 0 0 0 0</pose>
           <update_rate>30</update_rate>
-          <lidar>
+          <ray>
             <scan>
               <horizontal>
                 <samples>683</samples>
@@ -66,10 +68,40 @@
               <mean>0.0</mean>
               <stddev>0.001</stddev>
             </noise>
-          </lidar>
+          </ray>
           <alwaysOn>1</alwaysOn>
           <visualize>true</visualize>
         </sensor>
+
+        <!-- <sensor name="hls_lfcd_lds" type="gpu_lidar"> -->
+        <!--   <always_on>true</always_on> -->
+        <!--   <visualize>true</visualize> -->
+        <!--   <pose>-0.064 0 0.15 0 0 0</pose> -->
+        <!--   <update_rate>5</update_rate> -->
+        <!--   <topic>$(arg namespace)/scan</topic> -->
+        <!--   <gz_frame_id>base_scan</gz_frame_id> -->
+        <!--   <ray> -->
+        <!--     <scan> -->
+        <!--       <horizontal> -->
+        <!--         <samples>360</samples> -->
+        <!--         <resolution>1.000000</resolution> -->
+        <!--         <min_angle>0.000000</min_angle> -->
+        <!--         <max_angle>6.280000</max_angle> -->
+        <!--       </horizontal> -->
+        <!--     </scan> -->
+        <!--     <range> -->
+        <!--       <min>0.00001</min> -->
+        <!--       <max>20.0</max> -->
+        <!--       <resolution>0.015000</resolution> -->
+        <!--     </range> -->
+        <!--     <noise> -->
+        <!--       <type>gaussian</type> -->
+        <!--       <mean>0.0</mean> -->
+        <!--       <stddev>0.01</stddev> -->
+        <!--     </noise> -->
+        <!--   </ray> -->
+        <!-- </sensor> -->
+
       </gazebo>
     </xacro:if>
 
