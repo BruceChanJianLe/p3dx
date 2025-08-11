@@ -231,21 +231,6 @@ def generate_launch_description():
         ),
     )
 
-    # # Must have for multi robot, include this in the multi robot launch file
-    # # Handle the general gazebo topics
-    # gz_ros2_bridge_general_namespace = Node(
-    #   package="ros_gz_bridge",
-    #   executable="parameter_bridge",
-    #   name="ros_gz_bridge_general",
-    #   arguments=[
-    #       "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
-    #       "/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",
-    #     ],
-    #   condition=IfCondition(
-    #       NotEqualsSubstitution(LaunchConfiguration('robot_namespace'), "")
-    #   )
-    # )
-
     gz_ros2_bridge = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
@@ -297,9 +282,5 @@ def generate_launch_description():
             gz_spawn_entity_namespace,
             gz_ros2_bridge,
             gz_ros2_bridge_namespace,
-            # gz_ros2_bridge_general_namespace,
         ]
     )
-
-
-from launch_ros.actions import Node
