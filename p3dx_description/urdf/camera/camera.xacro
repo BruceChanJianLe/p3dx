@@ -4,7 +4,7 @@
   <!-- Camera -->
   <xacro:macro name="cam" params="name parent xyz rpy meshes robot_namespace">
 
-    <joint name="${parent}_${name}_joint" type="fixed">
+    <joint name="${name}_joint" type="fixed">
       <axis xyz="0 0 1" />
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent}" />
@@ -33,28 +33,45 @@
         </geometry>
       </collision>
     </link>
+
+    <joint name="${name}_optical_joint" type="fixed">
+      <parent link="${name}"/>
+      <child link="${name}_optical"/>
+      <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+    </joint>
+
+    <link name="${name}_optical"></link>
+
     <gazebo reference="${name}">
       <material value="Gazebo/Grey" />
     </gazebo>
 
     <gazebo reference="${name}">
-      <sensor type="depth_camera" name="${name}">
+      <sensor name="${name}" type="camera">
+        <pose> 0 0 0 0 0 0 </pose>
+        <visualize>true</visualize>
         <update_rate>30.0</update_rate>
-        <topic>${name}</topic>
-        <gz_frame_id>${name}</gz_frame_id>
-        <camera_info_topic>${name}/camera_info</camera_info_topic>
         <camera>
-          <horizontal_fov>1.3962634</horizontal_fov>
-          <image>
-            <width>800</width>
-            <height>800</height>
-            <format>R8G8B8</format>
-          </image>
-          <clip>
-            <near>0.05</near>
-            <far>300</far>
-          </clip>
+          <camera_info_topic>${name}/camera_info</camera_info_topic>
+            <horizontal_fov>1.089</horizontal_fov>
+            <image>
+                <format>R8G8B8</format>
+                <width>640</width>
+                <height>480</height>
+            </image>
+            <clip>
+                <near>0.05</near>
+                <far>8.0</far>
+            </clip>
         </camera>
+        <xacro:if value="${robot_namespace == '/'}">
+          <topic>${name}/image_raw</topic>
+          <gz_frame_id>${name}_optical</gz_frame_id>
+        </xacro:if>
+        <xacro:unless value="${robot_namespace == '/'}">
+        <topic>${robot_namespace}/${name}/image_raw</topic>
+        <gz_frame_id>${robot_namespace}/${name}_optical</gz_frame_id>
+        </xacro:unless>
       </sensor>
     </gazebo>
 
