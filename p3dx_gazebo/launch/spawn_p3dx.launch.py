@@ -167,7 +167,7 @@ def generate_launch_description():
                 ]
             ),
             PathJoinSubstitution(
-                [robot_namespace, "camera@sensor_msgs/msg/Image[gz.msgs.Image"]
+                [robot_namespace, "camera/image_raw@sensor_msgs/msg/Image[gz.msgs.Image"]
             ),
             PathJoinSubstitution(
                 [
@@ -206,8 +206,8 @@ def generate_launch_description():
                 "scan",
             ),
             (
-                PathJoinSubstitution(["/", robot_namespace, robot_namespace, "camera"]),
-                "camera",
+                PathJoinSubstitution(["/", robot_namespace, robot_namespace, "camera/image_raw"]),
+                "camera/image_raw",
             ),
             (
                 PathJoinSubstitution(
@@ -240,7 +240,7 @@ def generate_launch_description():
             "/RosAria/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist",
             "/RosAria/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry",
             "/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
-            "/camera@sensor_msgs/msg/Image[gz.msgs.Image",
+            "/camera/image_raw@sensor_msgs/msg/Image[gz.msgs.Image",
             "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
             "/imu/data@sensor_msgs/msg/Imu[gz.msgs.IMU",
             PathJoinSubstitution(
