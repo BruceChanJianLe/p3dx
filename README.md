@@ -9,6 +9,8 @@
 > they are not very well structured. Therefore, my attempt is to follow the [husky](https://github.com/husky)
 > simulation structure to re-structure the simulation for pioneer-3dx.
 
+[!video](https://github.com/user-attachments/assets/2cafaea6-7026-4709-ae8b-4399ccba02ba)
+
 ## Build
 
 Create new workspace and clone p3dx package.  
