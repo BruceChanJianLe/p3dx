@@ -1,0 +1,147 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+env:
+  ROS_DISTRO: jazzy
+
+jobs:
+  # ──────────────────────────────────────────────
+  # Job 1: Build & validate launch files
+  # ──────────────────────────────────────────────
+  build:
+    name: Build
+    runs-on: ubuntu-24.04
+    container:
+      image: osrf/ros:jazzy-desktop
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: src/p3dx
+
+      - name: Install dependencies
+        run: |
+          apt-get update -q
+          rosdep update --rosdistro $ROS_DISTRO
+          rosdep install --from-paths src --ignore-src -r -y
+
+      - name: Build
+        run: |
+          . /opt/ros/$ROS_DISTRO/setup.sh
+          colcon build --event-handlers console_cohesion+
+
+      - name: Verify launch files parse
+        run: |
+          . /opt/ros/$ROS_DISTRO/setup.sh
+          . install/setup.sh
+          ros2 launch --print-description p3dx_gazebo p3dx_warehouse_world.launch.py odometry_source:=encoders
+          ros2 launch --print-description p3dx_navigation amcl_demo.launch.py
+          ros2 launch --print-description p3dx_gazebo multi_p3dx_warehouse_world.launch.py odometry_source:=encoders
+
+  # ──────────────────────────────────────────────
+  # Job 2: Single robot navigation test
+  # ──────────────────────────────────────────────
+  test-single-robot:
+    name: Single Robot Navigation
+    needs: build
+    runs-on: ubuntu-24.04
+    container:
+      image: osrf/ros:jazzy-desktop
+      options: --shm-size=512m
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: src/p3dx
+
+      - name: Install dependencies
+        run: |
+          apt-get update -q
+          rosdep update --rosdistro $ROS_DISTRO
+          rosdep install --from-paths src --ignore-src -r -y
+
+      - name: Build
+        run: |
+          . /opt/ros/$ROS_DISTRO/setup.sh
+          colcon build
+
+      - name: Launch simulation
+        run: |
+          . /opt/ros/$ROS_DISTRO/setup.sh
+          . install/setup.sh
+          ros2 launch p3dx_gazebo p3dx_warehouse_world.launch.py odometry_source:=encoders headless:=true &
+          sleep 20
+
+      - name: Launch navigation stack
+        run: |
+          . /opt/ros/$ROS_DISTRO/setup.sh
+          . install/setup.sh
+          ros2 launch p3dx_navigation amcl_demo.launch.py &
+          sleep 20
+
+      - name: Run navigation goal test
+        run: |
+          . /opt/ros/$ROS_DISTRO/setup.sh
+          . install/setup.sh
+          # Single robot: spawn (12.86, -9.48) → goal (8.0, -9.0)
+          python3 src/p3dx/.github/scripts/test_nav.py '' 12.86 -9.48 8.0 -9.0
+
+  # ──────────────────────────────────────────────
+  # Job 3: Multi-robot navigation test
+  # ──────────────────────────────────────────────
+  test-multi-robot:
+    name: Multi-Robot Navigation
+    needs: build
+    runs-on: ubuntu-24.04
+    container:
+      image: osrf/ros:jazzy-desktop
+      options: --shm-size=512m
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: src/p3dx
+
+      - name: Install dependencies
+        run: |
+          apt-get update -q
+          rosdep update --rosdistro $ROS_DISTRO
+          rosdep install --from-paths src --ignore-src -r -y
+
+      - name: Build
+        run: |
+          . /opt/ros/$ROS_DISTRO/setup.sh
+          colcon build
+
+      - name: Launch multi-robot simulation
+        run: |
+          . /opt/ros/$ROS_DISTRO/setup.sh
+          . install/setup.sh
+          ros2 launch p3dx_gazebo multi_p3dx_warehouse_world.launch.py odometry_source:=encoders headless:=true &
+          sleep 20
+
+      - name: Launch navigation for pioneer_a and pioneer_b
+        run: |
+          . /opt/ros/$ROS_DISTRO/setup.sh
+          . install/setup.sh
+          ros2 launch p3dx_navigation amcl_demo.launch.py robot_namespace:=pioneer_a &
+          ros2 launch p3dx_navigation amcl_demo.launch.py robot_namespace:=pioneer_b &
+          sleep 20
+
+      - name: Run navigation goal tests (parallel)
+        run: |
+          . /opt/ros/$ROS_DISTRO/setup.sh
+          . install/setup.sh
+          # pioneer_a: spawn (12.86, -9.48) → goal (8.0, -9.0)
+          # pioneer_b: spawn (10.0,  -9.48) → goal (14.0, -7.0)
+          python3 src/p3dx/.github/scripts/test_nav.py pioneer_a 12.86 -9.48 8.0 -9.0 &
+          python3 src/p3dx/.github/scripts/test_nav.py pioneer_b 10.0 -9.48 14.0 -7.0 &
+          FAIL=0
+          for pid in $(jobs -p); do
+            wait $pid || FAIL=1
+          done
+          exit $FAIL
