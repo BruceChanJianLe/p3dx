@@ -87,8 +87,8 @@ jobs:
         run: |
           . /opt/ros/$ROS_DISTRO/setup.sh
           . install/setup.sh
-          # Single robot: spawn (12.86, -9.48) → goal (8.0, -9.0)
-          python3 src/p3dx/.github/scripts/test_nav.py '' 12.86 -9.48 8.0 -9.0
+          # Single robot: map frame initial pose (0.0, 0.0) → goal (-4.86, 0.48)
+          python3 src/p3dx/.github/scripts/test_nav.py '' 0.0 0.0 -4.86 0.48
 
   # ──────────────────────────────────────────────
   # Job 3: Multi-robot navigation test
@@ -129,17 +129,17 @@ jobs:
           . /opt/ros/$ROS_DISTRO/setup.sh
           . install/setup.sh
           ros2 launch p3dx_navigation amcl_demo.launch.py robot_namespace:=pioneer_a &
-          ros2 launch p3dx_navigation amcl_demo.launch.py robot_namespace:=pioneer_b &
+          ros2 launch p3dx_navigation amcl_demo.launch.py robot_namespace:=pioneer_b initial_pose_x:=-2.86 &
           sleep 20
 
       - name: Run navigation goal tests (parallel)
         run: |
           . /opt/ros/$ROS_DISTRO/setup.sh
           . install/setup.sh
-          # pioneer_a: spawn (12.86, -9.48) → goal (8.0, -9.0)
-          # pioneer_b: spawn (10.0,  -9.48) → goal (14.0, -7.0)
-          python3 src/p3dx/.github/scripts/test_nav.py pioneer_a 12.86 -9.48 8.0 -9.0 &
-          python3 src/p3dx/.github/scripts/test_nav.py pioneer_b 10.0 -9.48 14.0 -7.0 &
+          # pioneer_a: map frame initial pose (0.0, 0.0)   → goal (-4.86, 0.48)
+          # pioneer_b: map frame initial pose (-2.86, 0.0) → goal (1.14, 2.48)
+          python3 src/p3dx/.github/scripts/test_nav.py pioneer_a 0.0 0.0 -4.86 0.48 &
+          python3 src/p3dx/.github/scripts/test_nav.py pioneer_b -2.86 0.0 1.14 2.48 &
           FAIL=0
           for pid in $(jobs -p); do
             wait $pid || FAIL=1
