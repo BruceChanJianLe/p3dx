@@ -58,7 +58,7 @@ def generate_launch_description():
     # velocity_smoother reads from cmd_vel_nav and publishes smoothed commands to the robot
     velocity_smoother_remappings = remappings + [
         ("cmd_vel", "nav2/cmd_vel"),
-        ("smoothed/cmd_vel", "RosAria/cmd_vel"),
+        ("cmd_vel_smoothed", "RosAria/cmd_vel"),
     ]
 
     # Create our own temporary YAML files that include substitutions
