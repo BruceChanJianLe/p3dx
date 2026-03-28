@@ -25,6 +25,10 @@ def generate_launch_description():
 
     # namespace = LaunchConfiguration('namespace')
     robot_namespace = LaunchConfiguration("robot_namespace", default="")
+    initial_pose_x = LaunchConfiguration("initial_pose_x", default="0.0")
+    initial_pose_y = LaunchConfiguration("initial_pose_y", default="0.0")
+    initial_pose_z = LaunchConfiguration("initial_pose_z", default="0.0")
+    initial_pose_yaw = LaunchConfiguration("initial_pose_yaw", default="0.0")
     map_name = LaunchConfiguration("map_name")
     map_yaml_file = LaunchConfiguration(
         "map_yaml_file", default=[join(this_package_path, "maps/"), map_name, ".yaml"]
@@ -68,6 +72,16 @@ def generate_launch_description():
         ),
     )
 
+    params_file = ReplaceString(
+        source_file=params_file,
+        replacements={
+            "<initial_pose_x>": initial_pose_x,
+            "<initial_pose_y>": initial_pose_y,
+            "<initial_pose_z>": initial_pose_z,
+            "<initial_pose_yaw>": initial_pose_yaw,
+        },
+    )
+
     configured_params = ParameterFile(
         RewrittenYaml(
             source_file=params_file,
@@ -84,6 +98,19 @@ def generate_launch_description():
 
     declare_namespace_cmd = DeclareLaunchArgument(
         "robot_namespace", default_value="", description="Top-level namespace"
+    )
+
+    declare_initial_pose_x_cmd = DeclareLaunchArgument(
+        "initial_pose_x", default_value="0.0", description="AMCL initial pose x"
+    )
+    declare_initial_pose_y_cmd = DeclareLaunchArgument(
+        "initial_pose_y", default_value="0.0", description="AMCL initial pose y"
+    )
+    declare_initial_pose_z_cmd = DeclareLaunchArgument(
+        "initial_pose_z", default_value="0.0", description="AMCL initial pose z"
+    )
+    declare_initial_pose_yaw_cmd = DeclareLaunchArgument(
+        "initial_pose_yaw", default_value="0.0", description="AMCL initial pose yaw"
     )
 
     declare_map_name_cmd = DeclareLaunchArgument(
@@ -217,6 +244,10 @@ def generate_launch_description():
 
     # Declare the launch options
     ld.add_action(declare_namespace_cmd)
+    ld.add_action(declare_initial_pose_x_cmd)
+    ld.add_action(declare_initial_pose_y_cmd)
+    ld.add_action(declare_initial_pose_z_cmd)
+    ld.add_action(declare_initial_pose_yaw_cmd)
     ld.add_action(declare_map_name_cmd)
     # ld.add_action(declare_map_yaml_cmd)
     ld.add_action(declare_use_sim_time_cmd)

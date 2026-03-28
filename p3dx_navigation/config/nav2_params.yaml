@@ -40,6 +40,11 @@ amcl:
     scan_topic: scan
     map_topic: map
     set_initial_pose: True
+    initial_pose:
+      x: <initial_pose_x>
+      y: <initial_pose_y>
+      z: <initial_pose_z>
+      yaw: <initial_pose_yaw>
 
 bt_navigator:
   ros__parameters:
