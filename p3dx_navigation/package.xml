@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>p3dx_navigation</name>
-  <version>2.0.0</version>
+  <version>2.1.0</version>
   <description>Autonomous mapping and navigation demos for the P3DX</description>
 
   <author email="jianle001@e.ntu.edu.sg">Bruce Chan Jian Le</author>
