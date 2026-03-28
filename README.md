@@ -69,7 +69,7 @@ ros2 launch p3dx_navigation amcl_demo.launch.py robot_namespace:=pioneer_a
 
 Starting amcl demo for pioneer_b  
 ``` bash
-ros2 launch p3dx_navigation amcl_demo.launch.py robot_namespace:=pioneer_b
+ros2 launch p3dx_navigation amcl_demo.launch.py robot_namespace:=pioneer_b initial_pose_x:=-2.86
 ```
 
 Alternatively, you can also start the online 2d slam,
