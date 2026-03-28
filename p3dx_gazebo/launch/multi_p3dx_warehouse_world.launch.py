@@ -26,6 +26,7 @@ def generate_launch_description():
     camera_enabled = LaunchConfiguration("camera_enabled", default=True)
     lidar_enabled = LaunchConfiguration("lidar_enabled", default=True)
     odometry_source = LaunchConfiguration("odometry_source")
+    headless = LaunchConfiguration("headless", default=False)
 
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -35,6 +36,7 @@ def generate_launch_description():
             "use_sim_time": use_sim_time,
             "world_name": world_name,
             "world_file": world_file,
+            "headless": headless,
         }.items(),
     )
 
@@ -98,6 +100,11 @@ def generate_launch_description():
             DeclareLaunchArgument("camera_enabled", default_value=camera_enabled),
             DeclareLaunchArgument("lidar_enabled", default_value=lidar_enabled),
             DeclareLaunchArgument("odometry_source", default_value="encoders"),
+            DeclareLaunchArgument(
+                "headless",
+                default_value="false",
+                description="Run Gazebo server only (-s), no GUI",
+            ),
             DeclareLaunchArgument("x", default_value=x),
             DeclareLaunchArgument("y", default_value=y),
             DeclareLaunchArgument("yaw", default_value=yaw),
