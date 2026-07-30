@@ -115,25 +115,27 @@ controller_server:
       plugin: "eband_local_planner::EBandPlannerROS"
       # goal tolerances - must be <= the goal checker tolerances above
       xy_goal_tolerance: 0.15
-      yaw_goal_tolerance: 0.1
+      yaw_goal_tolerance: 0.05
       # velocity limits (match old DWB max_vel_x / velocity_smoother)
-      max_vel_lin: 0.26
-      max_vel_th: 1.0
-      min_vel_lin: 0.05
-      min_vel_th: 0.0
-      min_in_place_vel_th: 0.0
+      max_vel_lin: 0.6
+      max_vel_th: 0.35
+      min_vel_lin: 0.15
+      min_vel_th: 0.1
+      min_in_place_vel_th: 0.15
       in_place_trans_vel: 0.0
       # control loop - match controller_frequency
       ctrl_rate: 20.0
       max_translational_acceleration: 0.5
       max_rotational_acceleration: 1.5
       rotation_correction_threshold: 0.5
-      differential_drive: true
+      differential_drive: True
+      k_prop: 1.01
+      k_damp: 1.3
       # elastic band optimizer (defaults)
       eband_internal_force_gain: 1.0
       eband_external_force_gain: 2.0
       costmap_weight: 10.0
-      num_iterations_eband_optimization: 3
+      num_iterations_eband_optimization: 5
 
 local_costmap:
   local_costmap:
