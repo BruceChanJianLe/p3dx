@@ -47,15 +47,17 @@
         <xacro:unless value="${robot_namespace == '/'}">
           <topic>${robot_namespace}/RosAria/cmd_vel</topic>
         </xacro:unless>
-        <xacro:if value="${odometry_source == 'encoders'}">
+        <xacro:if value="${odometry_source == 'encoders' or odometry_source == 'ekf'}">
           <xacro:if value="${robot_namespace == '/'}">
             <odom_topic>RosAria/odom</odom_topic>
-            <tf_topic>/tf</tf_topic>
           </xacro:if>
           <xacro:unless value="${robot_namespace == '/'}">
             <odom_topic>${robot_namespace}/RosAria/odom</odom_topic>
-            <tf_topic>/tf</tf_topic>
           </xacro:unless>
+          <!-- only publish tf for odom when using encoders -->
+          <xacro:if value="${odometry_source == 'encoders'}">
+            <tf_topic>/tf</tf_topic>
+          </xacro:if>
         </xacro:if>
         <xacro:if value="${robot_namespace == '/'}">
           <frame_id>odom</frame_id>
