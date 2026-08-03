@@ -16,10 +16,10 @@ ekf_filter_node:
     frequency: 50.0
     two_d_mode: true
 
-    map_frame: map              # Defaults to "map" if unspecified
-    odom_frame: odom            # Defaults to "odom" if unspecified
-    base_link_frame: base_link  # Defaults to "base_link" if unspecified
-    world_frame: odom           # odom -> the EKF publishes the odom->base_link TF
+    map_frame: <tf_prefix>map              # Defaults to "map" if unspecified
+    odom_frame: <tf_prefix>odom            # Defaults to "odom" if unspecified
+    base_link_frame: <tf_prefix>base_link  # Defaults to "base_link" if unspecified
+    world_frame: <tf_prefix>odom           # odom -> the EKF publishes the odom->base_link TF
 
     # Whether to broadcast the transformation over the /tf topic.
     publish_tf: true
