@@ -41,32 +41,27 @@
         <wheel_separation>${0.3 + 0.01}</wheel_separation>
         <wheel_radius>${0.09+0.01}</wheel_radius>
         <odom_publish_frequency>50</odom_publish_frequency>
+
         <xacro:if value="${robot_namespace == '/'}">
           <topic>RosAria/cmd_vel</topic>
-        </xacro:if>
-        <xacro:unless value="${robot_namespace == '/'}">
-          <topic>${robot_namespace}/RosAria/cmd_vel</topic>
-        </xacro:unless>
-        <xacro:if value="${odometry_source == 'encoders' or odometry_source == 'ekf'}">
-          <xacro:if value="${robot_namespace == '/'}">
-            <odom_topic>RosAria/odom</odom_topic>
-          </xacro:if>
-          <xacro:unless value="${robot_namespace == '/'}">
-            <odom_topic>${robot_namespace}/RosAria/odom</odom_topic>
-          </xacro:unless>
+          <frame_id>odom</frame_id>
+          <child_frame_id>base_link</child_frame_id>
           <!-- only publish tf for odom when using encoders -->
           <xacro:if value="${odometry_source == 'encoders'}">
             <tf_topic>/tf</tf_topic>
           </xacro:if>
         </xacro:if>
-        <xacro:if value="${robot_namespace == '/'}">
-          <frame_id>odom</frame_id>
-          <child_frame_id>base_link</child_frame_id>
-        </xacro:if>
+
         <xacro:unless value="${robot_namespace == '/'}">
+          <topic>${robot_namespace}/RosAria/cmd_vel</topic>
           <frame_id>${robot_namespace}/odom</frame_id>
           <child_frame_id>${robot_namespace}/base_link</child_frame_id>
+          <!-- only publish tf for odom when using encoders -->
+          <xacro:if value="${odometry_source == 'encoders'}">
+            <tf_topic>${robot_namespace}/tf</tf_topic>
+          </xacro:if>
         </xacro:unless>
+
       </plugin>
     </gazebo>
 
@@ -74,16 +69,18 @@
       <gazebo>
         <plugin filename="libgz-sim6-odometry-publisher-system"
           name="gz::sim::systems::OdometryPublisher">
-          <odom_frame>odom</odom_frame>
           <xacro:if value="${robot_namespace == '/'}">
+            <odom_frame>odom</odom_frame>
             <frame_id>odom</frame_id>
             <child_frame_id>base_link</child_frame_id>
+            <tf_topic>/tf</tf_topic>
           </xacro:if>
           <xacro:unless value="${robot_namespace == '/'}">
+            <odom_frame>${robot_namespace}/odom</odom_frame>
             <frame_id>${robot_namespace}/odom</frame_id>
             <child_frame_id>${robot_namespace}/base_link</child_frame_id>
+            <tf_topic>${robot_namespace}/tf</tf_topic>
           </xacro:unless>
-          <tf_topic>/tf</tf_topic>
           <dimensions>2</dimensions>
           <odom_publish_frequency>50</odom_publish_frequency>
         </plugin>
