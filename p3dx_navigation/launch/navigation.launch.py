@@ -30,6 +30,8 @@ def generate_launch_description():
     container_name_full = (robot_namespace, "/", container_name)
     use_respawn = LaunchConfiguration("use_respawn")
     log_level = LaunchConfiguration("log_level")
+    odom_topic = LaunchConfiguration("odom_topic")
+
 
     lifecycle_nodes = [
         "controller_server",
@@ -62,7 +64,11 @@ def generate_launch_description():
     ]
 
     # Create our own temporary YAML files that include substitutions
-    param_substitutions = {"use_sim_time": use_sim_time, "autostart": autostart}
+    param_substitutions = {
+        "use_sim_time": use_sim_time,
+        "autostart": autostart,
+        "odom_topic": odom_topic,
+    }
 
     params_file = ReplaceString(
         source_file=params_file,
@@ -138,6 +144,14 @@ def generate_launch_description():
         "log_level", default_value="info", description="log level"
     )
 
+    declare_odom_topic_cmd = DeclareLaunchArgument(
+        "odom_topic",
+        default_value="RosAria/odom",
+        description="Odometry topic for nav2, "
+        "use RosAria/odom for wheel encoders, and odometry/filtered for ekf. "
+        "ekf can be found in p3dx_control package.",
+    )
+
     load_nodes = GroupAction(
         condition=IfCondition(PythonExpression(["not ", use_composition])),
         actions=[
@@ -190,7 +204,7 @@ def generate_launch_description():
                 respawn_delay=2.0,
                 parameters=[configured_params],
                 arguments=["--ros-args", "--log-level", log_level],
-                remappings=remappings,
+                remappings=controller_remappings,
             ),
             # ),
             Node(
@@ -326,6 +340,7 @@ def generate_launch_description():
     ld.add_action(declare_container_name_cmd)
     ld.add_action(declare_use_respawn_cmd)
     ld.add_action(declare_log_level_cmd)
+    ld.add_action(declare_odom_topic_cmd)
     # Add the actions to launch all of the navigation nodes
     ld.add_action(load_nodes)
     ld.add_action(load_composable_nodes)

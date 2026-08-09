@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>p3dx_control</name>
+  <version>2.1.0</version>
+  <description>Odometry fusion (robot_localization EKF) and control configs for the P3DX</description>
+
+  <author email="jianle001@e.ntu.edu.sg">brucechanjianle</author>
+  <maintainer email="jianle001@e.ntu.edu.sg">brucechanjianle</maintainer>
+
+  <license>MIT</license>
+  <url type="website">https://github.com/brucechanjianle/p3dx</url>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <exec_depend>robot_localization</exec_depend>
+  <exec_depend>interactive_marker_twist_server</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

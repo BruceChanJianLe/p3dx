@@ -105,7 +105,7 @@ def generate_launch_description():
             "-allow_renaming",
             "true",
             "-z",
-            "0.28",
+            "0.18",
             "-x",
             x,
             "-y",
@@ -130,7 +130,7 @@ def generate_launch_description():
             "-allow_renaming",
             "true",
             "-z",
-            "0.28",
+            "0.18",
             "-x",
             x,
             "-y",
@@ -148,6 +148,13 @@ def generate_launch_description():
         executable="parameter_bridge",
         namespace=robot_namespace,
         arguments=[
+            "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
+            PathJoinSubstitution(
+                [
+                    robot_namespace,
+                    "tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",
+                ]
+            ),
             PathJoinSubstitution(
                 [
                     robot_namespace,
@@ -189,6 +196,12 @@ def generate_launch_description():
             ),
         ],
         remappings=[
+            (
+                PathJoinSubstitution(
+                    ["/", robot_namespace, robot_namespace, "tf"]
+                ),
+                "/tf",
+            ),
             (
                 PathJoinSubstitution(
                     ["/", robot_namespace, robot_namespace, "RosAria/cmd_vel"]
