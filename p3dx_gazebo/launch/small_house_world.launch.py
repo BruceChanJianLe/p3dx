@@ -1,0 +1,50 @@
+#!/usr/bin/python3
+
+from os.path import join
+from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.substitutions import LaunchConfiguration, PythonExpression
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from ament_index_python.packages import get_package_share_directory
+from launch.actions import AppendEnvironmentVariable
+
+
+def generate_launch_description():
+    use_sim_time = LaunchConfiguration("use_sim_time", default=True)
+    headless = LaunchConfiguration("headless", default=False)
+
+    # world + models live in the aws_robomaker_small_house_world package
+    house_package_path = get_package_share_directory("aws_robomaker_small_house_world")
+    world_name = LaunchConfiguration("world_name", default="small_house")
+    world_file = LaunchConfiguration(
+        "world_file", default=join(house_package_path, "worlds", "small_house.world")
+    )
+    gz_sim_share = get_package_share_directory("ros_gz_sim")
+
+    gz_sim = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(join(gz_sim_share, "launch", "gz_sim.launch.py")),
+        launch_arguments={
+            "gz_args": PythonExpression(["'", world_file, " -r -s' if '", headless, "' == 'true' else '", world_file, " -r'"])
+        }.items(),
+    )
+
+    return LaunchDescription(
+        [
+            # so model:// references inside small_house.world resolve
+            AppendEnvironmentVariable(
+                name="GZ_SIM_RESOURCE_PATH", value=join(house_package_path, "models")
+            ),
+            AppendEnvironmentVariable(
+                name="GZ_SIM_RESOURCE_PATH", value=join(house_package_path, "worlds")
+            ),
+            DeclareLaunchArgument("use_sim_time", default_value=use_sim_time),
+            DeclareLaunchArgument("world_name", default_value=world_name),
+            DeclareLaunchArgument("world_file", default_value=world_file),
+            DeclareLaunchArgument(
+                "headless",
+                default_value="false",
+                description="Run Gazebo server only (-s), no GUI",
+            ),
+            gz_sim,
+        ]
+    )
