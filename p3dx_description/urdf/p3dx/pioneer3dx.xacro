@@ -4,6 +4,7 @@
   <!-- Obtain launch file arguements -->
   <xacro:arg name="robot_namespace" default="/" />
   <xacro:arg name="camera_enabled" default="true" />
+  <xacro:arg name="rgbd_camera_enabled" default="true" />
   <xacro:arg name="lidar_enabled" default="true" />
   <xacro:arg name="odometry_source" default="encoders" />
 
@@ -37,6 +38,13 @@
     <xacro:cam name="camera" parent="chassis" xyz="0 0 0.5" rpy="0 0 0"
       meshes="file://$(find p3dx_description)/meshes/camera"
       robot_namespace="$(arg robot_namespace)" />
+  </xacro:if>
+
+  <!-- Camera RGBD -->
+  <xacro:if value="$(arg rgbd_camera_enabled)">
+    <xacro:include filename="$(find p3dx_description)/urdf/camera_rgbd/camera_rgbd.xacro" />
+    <xacro:camera_rgbd name="rgbd_camera" parent="chassis" xyz="0.01 0 0.7"
+      rpy="0 ${35.0*pi/180.0} 0" robot_namespace="$(arg robot_namespace)" />
   </xacro:if>
 
   <!-- IMU -->

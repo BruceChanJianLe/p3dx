@@ -27,6 +27,7 @@ def generate_launch_description():
     yaw = LaunchConfiguration("yaw")
     camera_enabled = LaunchConfiguration("camera_enabled", default=True)
     lidar_enabled = LaunchConfiguration("lidar_enabled", default=True)
+    rgbd_camera_enabled = LaunchConfiguration("rgbd_camera_enabled", default=True)
     odometry_source = LaunchConfiguration("odometry_source", default="encoders")
     robot_namespace = LaunchConfiguration("robot_namespace", default="")
 
@@ -46,6 +47,8 @@ def generate_launch_description():
                         camera_enabled,
                         " lidar_enabled:=",
                         lidar_enabled,
+                        " rgbd_camera_enabled:=",
+                        rgbd_camera_enabled,
                         " odometry_source:=",
                         odometry_source,
                         " robot_namespace:=",
@@ -77,6 +80,8 @@ def generate_launch_description():
                         camera_enabled,
                         " lidar_enabled:=",
                         lidar_enabled,
+                        " rgbd_camera_enabled:=",
+                        rgbd_camera_enabled,
                         " odometry_source:=",
                         odometry_source,
                         " robot_namespace:=",
@@ -183,6 +188,27 @@ def generate_launch_description():
                 ]
             ),
             PathJoinSubstitution(
+                [robot_namespace, "rgbd_camera/image@sensor_msgs/msg/Image[gz.msgs.Image"]
+            ),
+            PathJoinSubstitution(
+                [
+                    robot_namespace,
+                    "rgbd_camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image",
+                ]
+            ),
+            PathJoinSubstitution(
+                [
+                    robot_namespace,
+                    "rgbd_camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+                ]
+            ),
+            PathJoinSubstitution(
+                [
+                    robot_namespace,
+                    "rgbd_camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked",
+                ]
+            ),
+            PathJoinSubstitution(
                 [robot_namespace, "imu/data@sensor_msgs/msg/Imu[gz.msgs.IMU"]
             ),
             PathJoinSubstitution(
@@ -229,6 +255,30 @@ def generate_launch_description():
                 "camera/camera_info",
             ),
             (
+                PathJoinSubstitution(
+                    ["/", robot_namespace, robot_namespace, "rgbd_camera/image"]
+                ),
+                "rgbd_camera/image",
+            ),
+            (
+                PathJoinSubstitution(
+                    ["/", robot_namespace, robot_namespace, "rgbd_camera/depth_image"]
+                ),
+                "rgbd_camera/depth_image",
+            ),
+            (
+                PathJoinSubstitution(
+                    ["/", robot_namespace, robot_namespace, "rgbd_camera/camera_info"]
+                ),
+                "rgbd_camera/camera_info",
+            ),
+            (
+                PathJoinSubstitution(
+                    ["/", robot_namespace, robot_namespace, "rgbd_camera/points"]
+                ),
+                "rgbd_camera/points",
+            ),
+            (
                 PathJoinSubstitution(["/", robot_namespace, robot_namespace, "imu/data"]),
                 "imu/data",
             ),
@@ -255,6 +305,10 @@ def generate_launch_description():
             "/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
             "/camera/image_raw@sensor_msgs/msg/Image[gz.msgs.Image",
             "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+            "/rgbd_camera/image@sensor_msgs/msg/Image[gz.msgs.Image",
+            "/rgbd_camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image",
+            "/rgbd_camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+            "/rgbd_camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked",
             "/imu/data@sensor_msgs/msg/Imu[gz.msgs.IMU",
             PathJoinSubstitution(
                 [
@@ -284,6 +338,7 @@ def generate_launch_description():
             DeclareLaunchArgument("world_name", default_value=world_name),
             DeclareLaunchArgument("camera_enabled", default_value=camera_enabled),
             DeclareLaunchArgument("lidar_enabled", default_value=lidar_enabled),
+            DeclareLaunchArgument( "rgbd_camera_enabled", default_value=rgbd_camera_enabled),
             DeclareLaunchArgument("odometry_source", default_value=odometry_source),
             DeclareLaunchArgument("x", default_value="0.0"),
             DeclareLaunchArgument("y", default_value="0.0"),

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Camera RGBD (gz sim rgbd_camera sensor) -->
+  <xacro:macro name="camera_rgbd" params="name parent xyz rpy robot_namespace">
+
+    <joint name="${name}_joint" type="fixed">
+      <origin xyz="${xyz}" rpy="${rpy}" />
+      <parent link="${parent}" />
+      <child link="${name}" />
+    </joint>
+
+    <link name="${name}">
+      <inertial>
+        <mass value="0.1" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.05 0.15 0.05" />
+        </geometry>
+        <material name="grey" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.05 0.15 0.05" />
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Optical frame (z forward, x right, y down) for the image and point cloud -->
+    <joint name="${name}_depth_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}" />
+      <parent link="${name}" />
+      <child link="${name}_depth_link" />
+    </joint>
+
+    <link name="${name}_depth_link"></link>
+
+    <gazebo reference="${name}">
+      <material value="Gazebo/Grey" />
+    </gazebo>
+
+    <!-- gz publishes <topic>/image, <topic>/depth_image, <topic>/points and
+         <topic>/camera_info; p3dx_gazebo/launch/spawn_p3dx.launch.py bridges them -->
+    <gazebo reference="${name}">
+      <sensor name="${name}" type="rgbd_camera">
+        <pose>0 0 0 0 0 0</pose>
+        <always_on>true</always_on>
+        <visualize>true</visualize>
+        <update_rate>20.0</update_rate>
+        <camera>
+          <horizontal_fov>1.047198</horizontal_fov>
+          <image>
+            <format>R8G8B8</format>
+            <width>640</width>
+            <height>480</height>
+          </image>
+          <clip>
+            <near>0.05</near>
+            <far>3.0</far>
+          </clip>
+        </camera>
+        <xacro:if value="${robot_namespace == '/'}">
+          <topic>${name}</topic>
+          <gz_frame_id>${name}_depth_link</gz_frame_id>
+        </xacro:if>
+        <xacro:unless value="${robot_namespace == '/'}">
+          <topic>${robot_namespace}/${name}</topic>
+          <gz_frame_id>${robot_namespace}/${name}_depth_link</gz_frame_id>
+        </xacro:unless>
+      </sensor>
+    </gazebo>
+
+  </xacro:macro>
+</robot>
